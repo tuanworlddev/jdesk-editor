@@ -32,6 +32,27 @@ on('editor.docChanged', (payload) => {
   });
 });
 
+// A file changed on disk outside the editor (spec §16). A clean document reloads; a dirty one is
+// marked conflicted and NEVER overwritten. Distinct from an agent's semantic edit above.
+const externalState: Record<string, string> = {};
+on('editor.externalChange', (payload) => {
+  const event = payload as { uri: string; state: string; content: string | null; origin: string };
+  externalState[event.uri] = event.state;
+  if (event.state === 'RELOADED' && event.content !== null && hasModel(event.uri)) {
+    applyAuthoritativeContent(event.uri, event.content, javaVersion(event.uri) + 1);
+    useStore.getState().setStatus(`Reloaded from disk (${event.origin})`);
+  } else if (event.state === 'CONFLICT') {
+    useStore.getState().setStatus(`Conflict: file changed on disk (${event.origin}) — not overwritten`);
+  } else if (event.state === 'DELETED') {
+    useStore.getState().setStatus(`File deleted on disk (${event.origin})`);
+  }
+});
+
+// E2E read-only probe extension for watcher assertions.
+(window as unknown as { __watcherProbe: unknown }).__watcherProbe = {
+  externalState: (uri: string) => externalState[uri] ?? 'NONE',
+};
+
 // Restore the workspace the Java side may have opened at startup (E2E passes --workspace).
 useStore.getState().refreshWorkspace().catch(() => {});
 

@@ -54,7 +54,14 @@ public final class Main {
             current.set(new EditorSession(java.nio.file.Path.of(startupWorkspace)));
         }
 
-        WorkspaceFacade workspace = new WorkspaceFacade(current::get, current::set);
+        AtomicReference<ApplicationHandle> handleRef = new AtomicReference<>();
+        AtomicReference<WorkspaceWatchService> watcherRef = new AtomicReference<>();
+        java.util.function.Consumer<EditorSession> onOpen = opened -> {
+            current.set(opened);
+            startWatcher(handleRef.get(), opened, watcherRef);
+        };
+
+        WorkspaceFacade workspace = new WorkspaceFacade(current::get, onOpen);
         DocumentFacade documents = new DocumentFacade(current::get);
 
         CommandRegistry registry = JDeskCommands.combine(
@@ -87,6 +94,14 @@ public final class Main {
                     closer.start();
                     return;
                 }
+                // Start the filesystem watcher for the current workspace (external-change reload /
+                // dirty-conflict), and re-start it whenever a new folder is opened.
+                handleRef.set(application);
+                EditorSession session = current.get();
+                if (session != null) {
+                    startWatcher(application, session, watcherRef);
+                }
+
                 if (!mcpEnabled) {
                     return;
                 }
@@ -127,6 +142,22 @@ public final class Main {
                         .build())
                 .run(args);
         System.exit(exit);
+    }
+
+    private static void startWatcher(ApplicationHandle handle, EditorSession session,
+            AtomicReference<WorkspaceWatchService> watcherRef) {
+        if (handle == null || session == null) {
+            return;
+        }
+        WorkspaceWatchService previous = watcherRef.getAndSet(null);
+        if (previous != null) {
+            previous.close();
+        }
+        WorkspaceWatchService watcher = new WorkspaceWatchService(handle, session, event ->
+                handle.window(new WindowId("main"))
+                        .ifPresent(w -> w.events().emit("editor.externalChange", event)));
+        watcher.start();
+        watcherRef.set(watcher);
     }
 
     private static void writeMcpConfig(Path mcpDir, McpServer server) {

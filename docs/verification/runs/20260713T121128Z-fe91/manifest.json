@@ -1,0 +1,27 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T121128Z-fe91",
+  "category" : "e2e-native",
+  "suite" : "watcher-flow",
+  "status" : "COMPLETE",
+  "startedAtUtc" : "2026-07-13T12:11:28.740317Z",
+  "os" : {
+    "name" : "Mac OS X",
+    "version" : "26.5.1",
+    "arch" : "aarch64"
+  },
+  "versions" : {
+    "java" : "25.0.3"
+  },
+  "appCommit" : "f2bb037f0409bbb23ab5f783ddd01659b682b4d8",
+  "appDirty" : true,
+  "jdeskSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "jdeskDirty" : false,
+  "jdeskPinnedSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "webView" : {
+    "backend" : "macos-wkwebview"
+  },
+  "endedAtUtc" : "2026-07-13T12:11:42.687339Z",
+  "outcome" : "PASS",
+  "testIds" : [ "E2E-10-watcher-reload", "E2E-10b-labeled-external", "E2E-11-conflict-no-overwrite" ]
+}

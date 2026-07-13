@@ -1,0 +1,30 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T121128Z-fe91",
+  "suite" : "watcher-flow",
+  "tests" : [ {
+    "id" : "E2E-10-watcher-reload",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/watcher.png" ],
+    "detail" : "clean doc reloaded from disk to 'externally changed\\n'"
+  }, {
+    "id" : "E2E-10b-labeled-external",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/watcher.png" ],
+    "detail" : "change labeled origin=external-watcher, state=RELOADED"
+  }, {
+    "id" : "E2E-11-conflict-no-overwrite",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/watcher.png" ],
+    "detail" : "dirty buffer preserved on conflict (state=CONFLICT, buffer kept edit=True)"
+  } ],
+  "summary" : {
+    "pass" : 3,
+    "fail" : 0,
+    "blocked" : 0
+  },
+  "overall" : "PASS"
+}

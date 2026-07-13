@@ -20,6 +20,9 @@ full `clean check`) live in `docs/JDESK_AUDIT.md`, not this table.
 | E2E-04-dirty | ✅ PASS | `docs/verification/runs/20260713T111904Z-44ef` | dirty=True |
 | E2E-05-save | ✅ PASS | `docs/verification/runs/20260713T111904Z-44ef` | disk sha256=dbab09cc4c16 expected=dbab09cc4c16 match=True |
 | E2E-06-clean-after-save | ✅ PASS | `docs/verification/runs/20260713T111904Z-44ef` | dirty after save=False |
+| E2E-10-watcher-reload | ✅ PASS | `docs/verification/runs/20260713T121128Z-fe91` | clean doc reloaded from disk to 'externally changed\n' |
+| E2E-10b-labeled-external | ✅ PASS | `docs/verification/runs/20260713T121128Z-fe91` | change labeled origin=external-watcher, state=RELOADED |
+| E2E-11-conflict-no-overwrite | ✅ PASS | `docs/verification/runs/20260713T121128Z-fe91` | dirty buffer preserved on conflict (state=CONFLICT, buffer kept edit=True) |
 | GATE-01 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | base worker computed 1 line change(s); 2 worker(s) spawned |
 | GATE-02 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | TS worker returned 1 semantic diagnostic(s) |
 | GATE-03 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | JSON worker produced 1 schema marker(s) |
