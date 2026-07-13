@@ -12,26 +12,65 @@ import './styles.css';
 // Bridge model dirty-state changes into the tab store (kept out of React's render path).
 onDirtyChange((uri, dirty) => useStore.getState().markTabDirty(uri, dirty));
 
-// Agent edits arriving via MCP push new content to the live model, so an agent's change appears
-// in the running editor. If the changed document is not open yet, open it so the agent's work is
-// visible.
-on('editor.docChanged', (payload) => {
-  const event = payload as { uri: string; content: string; version: number };
-  if (hasModel(event.uri)) {
-    applyAuthoritativeContent(event.uri, event.content, event.version);
-    useStore.getState().setActive(event.uri);
-    return;
-  }
-  // Not open yet (agent created a new file): refresh the Explorer, then open it so the edit shows.
+// Agent edits arriving via MCP appear in the running editor. When the change carries edit ops we
+// STREAM them like human typing (CINEMATIC), with the agent pointer following the insertion point;
+// otherwise (create/save) we reload the content. Files not open yet are opened first so the work
+// is visible.
+on('editor.docChanged', async (payload) => {
+  const event = payload as {
+    uri: string; content: string; version: number; editsJson: string | null; mode: string;
+  };
   const store = useStore.getState();
-  const rootPath = store.workspace?.rootPath;
-  const filePath = decodeURIComponent(event.uri.replace(/^file:\/\//, ''));
-  const rel = rootPath && filePath.startsWith(rootPath)
-    ? filePath.slice(rootPath.length).replace(/^\//, '')
-    : null;
-  void store.refreshWorkspace().then(() => {
-    if (rel) void store.openFile(rel).catch(() => {});
-  });
+
+  if (!hasModel(event.uri)) {
+    const rootPath = store.workspace?.rootPath;
+    const filePath = decodeURIComponent(event.uri.replace(/^file:\/\//, ''));
+    const rel = rootPath && filePath.startsWith(rootPath)
+      ? filePath.slice(rootPath.length).replace(/^\//, '') : null;
+    await store.refreshWorkspace();
+    if (rel) await store.openFile(rel).catch(() => {});
+    // A tick for the editor to mount the model before streaming.
+    await new Promise((r) => setTimeout(r, 60));
+  }
+  store.setActive(event.uri);
+
+  const model = getModel(event.uri);
+  if (event.editsJson && model) {
+    const editor = monacoRef.editor.getEditors()[0] ?? null;
+    const edits = JSON.parse(event.editsJson);
+    // Follow the streaming cursor with the agent pointer (geometry computed in-page).
+    const follow = window.setInterval(() => {
+      if (!editor) return;
+      const pos = editor.getPosition();
+      const vp = pos && editor.getScrolledVisiblePosition(pos);
+      const node = editor.getDomNode();
+      if (vp && node) {
+        const r = node.getBoundingClientRect();
+        store.showPointer(r.left + vp.left + 2, r.top + vp.top + 8, 'Claude', '#4dd6c1');
+      }
+    }, 120);
+    try {
+      await applyTransaction(editor, model, edits, (event.mode as 'CINEMATIC') ?? 'CINEMATIC');
+    } finally {
+      window.clearInterval(follow);
+      // Reconcile to the Java-authoritative content, then retire the pointer.
+      if (model.getValue() !== event.content) applyAuthoritativeContent(event.uri, event.content, event.version);
+      setTimeout(() => store.hidePointer(), 600);
+    }
+  } else {
+    applyAuthoritativeContent(event.uri, event.content, event.version);
+  }
+});
+
+// Native menu actions → forwarded to the App as DOM events.
+on('app.menu', (payload) => {
+  const detail = payload as { actionId: string };
+  window.dispatchEvent(new CustomEvent('jdesk:menu', { detail }));
+});
+
+// A folder was opened natively (menu / drag-drop). Reload the workspace view.
+on('app.openWorkspace', () => {
+  void useStore.getState().reloadWorkspace();
 });
 
 // A file changed on disk outside the editor (spec §16). A clean document reloads; a dirty one is

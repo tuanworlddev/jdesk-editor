@@ -41,7 +41,7 @@ class McpServerIT {
         Files.writeString(workspace.resolve("existing.txt"), "hello\n");
         PathService paths = new PathService(workspace);
         DocumentStore documents = new DocumentStore(paths, new AtomicSaver(), System::currentTimeMillis);
-        CoreEditorBridge bridge = new CoreEditorBridge(paths, new FileTree(paths), documents, uri -> {});
+        CoreEditorBridge bridge = new CoreEditorBridge(paths, new FileTree(paths), documents, dc -> {});
         server = new McpServer(bridge, root.resolve("mcp/discovery.json"));
         server.start();
     }
@@ -146,7 +146,7 @@ class McpServerIT {
         // A server whose approval gate says yes performs the deletion.
         PathService paths = new PathService(workspace);
         DocumentStore documents = new DocumentStore(paths, new AtomicSaver(), System::currentTimeMillis);
-        CoreEditorBridge bridge = new CoreEditorBridge(paths, new FileTree(paths), documents, uri -> {});
+        CoreEditorBridge bridge = new CoreEditorBridge(paths, new FileTree(paths), documents, dc -> {});
         try (McpServer approving = new McpServer(bridge,
                 workspace.resolve("mcp2/discovery.json"), (tool, a) -> true)) {
             approving.start();

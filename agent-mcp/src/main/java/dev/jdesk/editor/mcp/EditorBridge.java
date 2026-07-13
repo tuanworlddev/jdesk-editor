@@ -20,6 +20,12 @@ public interface EditorBridge {
     record DocumentInfo(String uri, String relPath, long version, String contentHash,
             String content) {}
 
+    /**
+     * Notification that a document changed through an agent. {@code edits} are the edit operations
+     * (empty = a full reload, e.g. after create/save) so the UI can stream them like human typing.
+     */
+    record DocChange(String uri, List<TextEditDto> edits) {}
+
     record DiagnosticInfo(String relPath, int line, int column, String severity, String message,
             String code) {}
 

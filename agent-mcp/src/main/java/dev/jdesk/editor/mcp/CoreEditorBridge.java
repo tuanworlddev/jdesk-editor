@@ -23,10 +23,10 @@ public final class CoreEditorBridge implements EditorBridge {
     private final PathService paths;
     private final FileTree fileTree;
     private final DocumentStore documents;
-    private final Consumer<String> onDocumentChanged;
+    private final Consumer<DocChange> onDocumentChanged;
 
     public CoreEditorBridge(PathService paths, FileTree fileTree, DocumentStore documents,
-            Consumer<String> onDocumentChanged) {
+            Consumer<DocChange> onDocumentChanged) {
         this.paths = paths;
         this.fileTree = fileTree;
         this.documents = documents;
@@ -73,7 +73,7 @@ public final class CoreEditorBridge implements EditorBridge {
     @Override
     public OperationResult createFile(String relPath) {
         EditorDocument doc = documents.create(relPath);
-        onDocumentChanged.accept(doc.uri());
+        onDocumentChanged.accept(new DocChange(doc.uri(), List.of()));
         return new OperationResult(newOperationId(), "COMMITTED",
                 Map.of(doc.uri(), doc.version()), "Created and opened " + relPath);
     }
@@ -123,7 +123,7 @@ public final class CoreEditorBridge implements EditorBridge {
         try {
             DocumentStore.EditResult result =
                     documents.applyEdits(doc.uri(), doc.version(), edits, Lease.agent(agentId));
-            onDocumentChanged.accept(doc.uri());
+            onDocumentChanged.accept(new DocChange(doc.uri(), edits));
             return new OperationResult(newOperationId(), "COMMITTED",
                     Map.of(doc.uri(), result.version()),
                     "Applied " + edits.size() + " edit(s) to " + relPath);

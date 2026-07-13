@@ -16,9 +16,11 @@ interface EditorStore {
   tabs: Tab[];
   activeUri: string | null;
   statusMessage: string;
+  pointer: { visible: boolean; x: number; y: number; label: string; color: string };
 
   openWorkspace(path: string): Promise<void>;
   refreshWorkspace(): Promise<void>;
+  reloadWorkspace(): Promise<void>;
   toggleDir(relPath: string): Promise<void>;
   openFile(relPath: string): Promise<void>;
   setActive(uri: string): void;
@@ -27,6 +29,8 @@ interface EditorStore {
   createFile(relPath: string): Promise<void>;
   markTabDirty(uri: string, dirty: boolean): void;
   setStatus(message: string): void;
+  showPointer(x: number, y: number, label: string, color: string): void;
+  hidePointer(): void;
 }
 
 export const useStore = create<EditorStore>((set, get) => ({
@@ -37,6 +41,7 @@ export const useStore = create<EditorStore>((set, get) => ({
   tabs: [],
   activeUri: null,
   statusMessage: 'Ready',
+  pointer: { visible: false, x: 0, y: 0, label: '', color: '#4dd6c1' },
 
   async openWorkspace(path: string) {
     const state = await commands.workspace.open({ path });
@@ -47,6 +52,18 @@ export const useStore = create<EditorStore>((set, get) => ({
   async refreshWorkspace() {
     const state = await commands.workspace.getState();
     if (state.open) set({ workspace: state, rootEntries: state.rootEntries });
+  },
+
+  async reloadWorkspace() {
+    // A different folder was opened natively: drop the old tabs/models and load the new tree.
+    get().tabs.forEach((t) => disposeModel(t.uri));
+    const state = await commands.workspace.getState();
+    set({
+      workspace: state.open ? state : null,
+      rootEntries: state.open ? state.rootEntries : [],
+      childrenByDir: {}, expandedDirs: new Set(), tabs: [], activeUri: null,
+      statusMessage: state.open ? `Opened ${state.rootName}` : 'Ready',
+    });
   },
 
   async toggleDir(relPath: string) {
@@ -117,6 +134,14 @@ export const useStore = create<EditorStore>((set, get) => ({
 
   setStatus(message: string) {
     set({ statusMessage: message });
+  },
+
+  showPointer(x: number, y: number, label: string, color: string) {
+    set({ pointer: { visible: true, x, y, label, color } });
+  },
+
+  hidePointer() {
+    set((s) => ({ pointer: { ...s.pointer, visible: false } }));
   },
 }));
 

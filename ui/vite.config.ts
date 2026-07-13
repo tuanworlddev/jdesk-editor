@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 import { resolve } from 'node:path';
 
 // Production bundle served from the app jar over jdesk://app/ (packaged-identical). Relative base
@@ -7,7 +8,7 @@ import { resolve } from 'node:path';
 // proved on WKWebView (docs/MONACO_WORKER_STRATEGY.md). No blob workers, no CDN, no eval.
 export default defineConfig({
   base: './',
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   worker: { format: 'es' },
   build: {
     outDir: resolve(__dirname, 'dist'),

@@ -67,11 +67,16 @@ public final class Main {
         AtomicReference<Path> mcpConfigRef = new AtomicReference<>();
         dev.jdesk.editor.app.ipc.AgentFacade agents =
                 new dev.jdesk.editor.app.ipc.AgentFacade(mcpConfigRef::get);
+        // TerminalManager is created at onReady (needs the ApplicationHandle); the facade reads it lazily.
+        AtomicReference<TerminalManager> terminalsRef = new AtomicReference<>();
+        dev.jdesk.editor.app.ipc.TerminalFacade terminalFacade =
+                new dev.jdesk.editor.app.ipc.TerminalFacade(terminalsRef::get, current::get);
 
         CommandRegistry registry = JDeskCommands.combine(
                 WorkspaceFacadeCommands.create(workspace),
                 DocumentFacadeCommands.create(documents),
-                dev.jdesk.editor.app.ipc.AgentFacadeCommands.create(agents));
+                dev.jdesk.editor.app.ipc.AgentFacadeCommands.create(agents),
+                dev.jdesk.editor.app.ipc.TerminalFacadeCommands.create(terminalFacade));
 
         CapabilitySet capabilities = CapabilitySet.of(Set.of(
                 CapabilityGrant.forAllWindows("editor:core")));
@@ -107,10 +112,27 @@ public final class Main {
                     startWatcher(application, session, watcherRef);
                 }
 
+                // Native application menu (File / Edit / View / Agent). Menu actions are forwarded
+                // to the frontend as window events; Open Folder shows the native folder picker.
+                installMenu(application, () -> openFolderAndBroadcast(application, onOpen));
+                // Drag-and-drop a folder onto the window to open it as the workspace.
+                application.window(new WindowId("main")).ifPresent(w -> w.onFileDrop(paths -> {
+                    for (Path p : paths) {
+                        if (java.nio.file.Files.isDirectory(p)) {
+                            openWorkspace(application, onOpen, p.toString());
+                            break;
+                        }
+                    }
+                }));
+
+                // The interactive terminal is always available; the MCP server (agent control) is
+                // gated on mcpEnabled.
+                TerminalManager terminals = new TerminalManager(application);
+                terminalsRef.set(terminals);
+
                 if (!mcpEnabled) {
                     return;
                 }
-                TerminalManager terminals = new TerminalManager(application);
                 AppEditorBridge bridge = new AppEditorBridge(current::get, event ->
                         application.window(new WindowId("main"))
                                 .ifPresent(w -> w.events().emit("editor.docChanged", event)),
@@ -167,6 +189,65 @@ public final class Main {
                 .run(args);
         System.exit(exit);
     }
+
+    /** Builds the native menu bar and routes actions to the frontend (or the folder picker). */
+    private static void installMenu(ApplicationHandle application, Runnable openFolder) {
+        dev.jdesk.api.MenuSpec menu = dev.jdesk.api.MenuSpec.of(
+                new dev.jdesk.api.MenuItem.Submenu("File", java.util.List.of(
+                        dev.jdesk.api.MenuItem.action("file.openFolder", "Open Folder…", "CmdOrCtrl+O"),
+                        dev.jdesk.api.MenuItem.action("file.newFile", "New File", "CmdOrCtrl+N"),
+                        new dev.jdesk.api.MenuItem.Separator(),
+                        dev.jdesk.api.MenuItem.action("file.save", "Save", "CmdOrCtrl+S"),
+                        dev.jdesk.api.MenuItem.action("file.saveAll", "Save All", "CmdOrCtrl+Alt+S"))),
+                new dev.jdesk.api.MenuItem.Submenu("Edit", java.util.List.of(
+                        dev.jdesk.api.MenuItem.action("edit.undo", "Undo", "CmdOrCtrl+Z"),
+                        dev.jdesk.api.MenuItem.action("edit.redo", "Redo", "CmdOrCtrl+Shift+Z"))),
+                new dev.jdesk.api.MenuItem.Submenu("View", java.util.List.of(
+                        dev.jdesk.api.MenuItem.action("view.explorer", "Explorer"),
+                        dev.jdesk.api.MenuItem.action("view.terminal", "Terminal", "CmdOrCtrl+`"),
+                        dev.jdesk.api.MenuItem.action("view.agent", "Agent Panel"))),
+                new dev.jdesk.api.MenuItem.Submenu("Agent", java.util.List.of(
+                        dev.jdesk.api.MenuItem.action("agent.start", "Start Agent"),
+                        dev.jdesk.api.MenuItem.action("agent.interrupt", "Interrupt"))));
+
+        application.setApplicationMenu(menu, actionId -> {
+            if (actionId.equals("file.openFolder")) {
+                openFolder.run();
+            } else {
+                // Forward every other menu action to the frontend to run the same UI command.
+                application.window(new WindowId("main"))
+                        .ifPresent(w -> w.events().emit("app.menu", new MenuAction(actionId)));
+            }
+        });
+    }
+
+    /** Payload for a forwarded menu action (public record for JSON binding). */
+    public record MenuAction(String actionId) {}
+
+    private static void openFolderAndBroadcast(ApplicationHandle application,
+            java.util.function.Consumer<EditorSession> onOpen) {
+        application.showOpenDialog(new dev.jdesk.api.FileDialog.OpenDialog(
+                        "Open Folder", java.util.Optional.empty(), java.util.List.of(), false, true))
+                .thenAccept(result -> {
+                    if (!result.paths().isEmpty()) {
+                        openWorkspace(application, onOpen, result.paths().get(0));
+                    }
+                });
+    }
+
+    private static void openWorkspace(ApplicationHandle application,
+            java.util.function.Consumer<EditorSession> onOpen, String path) {
+        try {
+            onOpen.accept(new EditorSession(Path.of(path)));
+            application.window(new WindowId("main"))
+                    .ifPresent(w -> w.events().emit("app.openWorkspace", new WorkspaceOpened(path)));
+        } catch (Exception e) {
+            System.err.println("Failed to open workspace " + path + ": " + e.getMessage());
+        }
+    }
+
+    /** Payload telling the frontend a workspace was opened natively (public record). */
+    public record WorkspaceOpened(String path) {}
 
     private static void startWatcher(ApplicationHandle handle, EditorSession session,
             AtomicReference<WorkspaceWatchService> watcherRef) {

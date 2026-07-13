@@ -30,7 +30,7 @@ const raf = () => new Promise<number>((r) => requestAnimationFrame(r));
  * changed text in small character groups. All converge to the same final content.
  */
 export async function applyTransaction(
-  editor: monaco.editor.IStandaloneCodeEditor | null,
+  editor: monaco.editor.ICodeEditor | null,
   model: monaco.editor.ITextModel,
   edits: StagedEdit[],
   mode: PresentationMode,

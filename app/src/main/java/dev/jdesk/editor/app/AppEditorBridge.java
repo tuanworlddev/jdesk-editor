@@ -4,6 +4,7 @@ import dev.jdesk.editor.api.EditorErrorCode;
 import dev.jdesk.editor.api.EditorException;
 import dev.jdesk.editor.core.doc.EditorDocument;
 import dev.jdesk.editor.mcp.CoreEditorBridge;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.jdesk.editor.mcp.EditorBridge;
 
 import java.util.List;
@@ -18,8 +19,15 @@ import java.util.function.Supplier;
  */
 public final class AppEditorBridge implements EditorBridge {
 
-    /** Payload for the {@code editor.docChanged} window event (public record for JSON binding). */
-    public record DocChangedEvent(String uri, String content, long version) {}
+    /**
+     * Payload for the {@code editor.docChanged} window event. When {@code editsJson} is present the
+     * UI streams those edits in the given {@code mode} (like human typing); otherwise it reloads
+     * {@code content} (create/save). Public record for JSON binding.
+     */
+    public record DocChangedEvent(String uri, String content, long version, String editsJson,
+            String mode) {}
+
+    private static final ObjectMapper JSON = new ObjectMapper();
 
     private final Supplier<EditorSession> session;
     private final Consumer<DocChangedEvent> uiSink;
@@ -38,12 +46,23 @@ public final class AppEditorBridge implements EditorBridge {
             throw new EditorException(EditorErrorCode.TARGET_NOT_ACTIONABLE, "No workspace is open");
         }
         return new CoreEditorBridge(current.paths(), current.fileTree(), current.documents(),
-                uri -> pushToUi(current, uri));
+                change -> pushToUi(current, change));
     }
 
-    private void pushToUi(EditorSession current, String uri) {
-        current.documents().find(uri).ifPresent((EditorDocument doc) ->
-                uiSink.accept(new DocChangedEvent(uri, doc.content(), doc.version())));
+    private void pushToUi(EditorSession current, EditorBridge.DocChange change) {
+        current.documents().find(change.uri()).ifPresent((EditorDocument doc) -> {
+            String editsJson = null;
+            String mode = "INSTANT";
+            if (!change.edits().isEmpty()) {
+                try {
+                    editsJson = JSON.writeValueAsString(change.edits());
+                    mode = "CINEMATIC"; // stream agent edits like human typing
+                } catch (Exception ignored) {
+                    // fall back to full-content reload
+                }
+            }
+            uiSink.accept(new DocChangedEvent(change.uri(), doc.content(), doc.version(), editsJson, mode));
+        });
     }
 
     @Override public WorkspaceInfo workspace() { return delegate().workspace(); }

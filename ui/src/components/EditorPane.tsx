@@ -54,15 +54,17 @@ export function EditorPane() {
   }, [activeUri]);
 
   return (
-    <div className="editor-pane">
+    <div className="relative h-full w-full">
       {!activeUri && (
-        <div className="editor-welcome">
-          <h1>JDesk Editor</h1>
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-[--color-fg-dim]">
+          <h1 className="m-0 text-[26px] font-semibold tracking-tight text-[--color-fg-bright]">JDesk Editor</h1>
           <p>Select a file in the Explorer to start editing.</p>
-          <p className="hint">Agent-native · Monaco on the native WebView · ⌘S to save</p>
+          <p className="text-[12px] text-[--color-accent-dim]">
+            Agent-native · Monaco on the native WebView · ⌘S to save
+          </p>
         </div>
       )}
-      <div ref={containerRef} className="monaco-host" style={{ display: activeUri ? 'block' : 'none' }} />
+      <div ref={containerRef} className="absolute inset-0" style={{ display: activeUri ? 'block' : 'none' }} />
     </div>
   );
 }
