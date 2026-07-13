@@ -14,6 +14,12 @@ full `clean check`) live in `docs/JDESK_AUDIT.md`, not this table.
 
 | Test | Outcome | Evidence | Detail |
 |---|---|---|---|
+| E2E-01-workspace | ✅ PASS | `docs/verification/runs/20260713T111904Z-44ef` | explorer ids: ['folder:src', 'file:README.md'] |
+| E2E-02-open | ✅ PASS | `docs/verification/runs/20260713T111904Z-44ef` | opened README.md, content='# Demo\n' |
+| E2E-03-edit | ✅ PASS | `docs/verification/runs/20260713T111904Z-44ef` | post-edit java version=2, text='# Demo\n\nedited by e2e\n' |
+| E2E-04-dirty | ✅ PASS | `docs/verification/runs/20260713T111904Z-44ef` | dirty=True |
+| E2E-05-save | ✅ PASS | `docs/verification/runs/20260713T111904Z-44ef` | disk sha256=dbab09cc4c16 expected=dbab09cc4c16 match=True |
+| E2E-06-clean-after-save | ✅ PASS | `docs/verification/runs/20260713T111904Z-44ef` | dirty after save=False |
 | GATE-01 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | base worker computed 1 line change(s); 2 worker(s) spawned |
 | GATE-02 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | TS worker returned 1 semantic diagnostic(s) |
 | GATE-03 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | JSON worker produced 1 schema marker(s) |

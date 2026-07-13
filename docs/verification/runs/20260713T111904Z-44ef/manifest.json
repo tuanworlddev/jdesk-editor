@@ -1,0 +1,28 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T111904Z-44ef",
+  "category" : "e2e-native",
+  "suite" : "editor-basic-flow",
+  "status" : "COMPLETE",
+  "startedAtUtc" : "2026-07-13T11:19:04.332584Z",
+  "os" : {
+    "name" : "Mac OS X",
+    "version" : "26.5.1",
+    "arch" : "aarch64"
+  },
+  "versions" : {
+    "java" : "25.0.3"
+  },
+  "appCommit" : "b09a5f2d401913befde4699bd5fb028e1ccea40f",
+  "appDirty" : true,
+  "jdeskSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "jdeskDirty" : false,
+  "jdeskPinnedSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "webView" : {
+    "backend" : "macos-wkwebview",
+    "userAgent" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)"
+  },
+  "endedAtUtc" : "2026-07-13T11:19:19.238046Z",
+  "outcome" : "PASS",
+  "testIds" : [ "E2E-01-workspace", "E2E-02-open", "E2E-03-edit", "E2E-04-dirty", "E2E-05-save", "E2E-06-clean-after-save" ]
+}
