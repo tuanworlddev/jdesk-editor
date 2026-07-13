@@ -1,0 +1,25 @@
+# Build outputs
+build/
+.gradle/
+out/
+
+# Frontend
+node_modules/
+ui/dist/
+e2e/gate-app/ui/dist/
+
+# Evidence runs are never committed (cited stubs live in docs/verification/runs/)
+artifacts/test-runs/
+
+# Local-only files
+*.local.json
+.DS_Store
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# jqwik property test database
+.jqwik-database
+**/.jqwik-database

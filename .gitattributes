@@ -1,0 +1,12 @@
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.gif binary
+*.woff binary
+*.woff2 binary
+*.jar binary
+*.tgz binary
+gradlew text eol=lf
+gradlew.bat text eol=crlf
+test-fixtures/** text eol=lf
+src/test/resources/fixtures/** text eol=lf
