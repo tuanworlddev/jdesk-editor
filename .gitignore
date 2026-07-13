@@ -27,3 +27,6 @@ artifacts/
 
 # Generated frontend bundle (rebuilt by :e2e:gate-app:frontendBuild)
 e2e/gate-app/src/main/resources/web/
+
+# TypeScript incremental build info
+*.tsbuildinfo

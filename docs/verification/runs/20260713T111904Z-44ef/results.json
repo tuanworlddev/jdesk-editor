@@ -1,0 +1,48 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T111904Z-44ef",
+  "suite" : "editor-basic-flow",
+  "tests" : [ {
+    "id" : "E2E-01-workspace",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "console.json", "screenshots/editor.png" ],
+    "detail" : "explorer ids: ['folder:src', 'file:README.md']"
+  }, {
+    "id" : "E2E-02-open",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "console.json", "screenshots/editor.png" ],
+    "detail" : "opened README.md, content='# Demo\\n'"
+  }, {
+    "id" : "E2E-03-edit",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "console.json", "screenshots/editor.png" ],
+    "detail" : "post-edit java version=2, text='# Demo\\n\\nedited by e2e\\n'"
+  }, {
+    "id" : "E2E-04-dirty",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "console.json", "screenshots/editor.png" ],
+    "detail" : "dirty=True"
+  }, {
+    "id" : "E2E-05-save",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "console.json", "screenshots/editor.png" ],
+    "detail" : "disk sha256=dbab09cc4c16 expected=dbab09cc4c16 match=True"
+  }, {
+    "id" : "E2E-06-clean-after-save",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "console.json", "screenshots/editor.png" ],
+    "detail" : "dirty after save=False"
+  } ],
+  "summary" : {
+    "pass" : 6,
+    "fail" : 0,
+    "blocked" : 0
+  },
+  "overall" : "PASS"
+}
