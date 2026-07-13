@@ -63,9 +63,11 @@ public final class Main {
                 if (!mcpEnabled) {
                     return;
                 }
+                TerminalManager terminals = new TerminalManager(application);
                 AppEditorBridge bridge = new AppEditorBridge(current::get, event ->
                         application.window(new WindowId("main"))
-                                .ifPresent(w -> w.events().emit("editor.docChanged", event)));
+                                .ifPresent(w -> w.events().emit("editor.docChanged", event)),
+                        terminals);
                 Path mcpDir = Path.of(System.getProperty("jdesk.editor.mcp.dir",
                         System.getProperty("java.io.tmpdir") + "/jdesk-editor-mcp"));
                 McpServer server = new McpServer(bridge, mcpDir.resolve("discovery.json"));

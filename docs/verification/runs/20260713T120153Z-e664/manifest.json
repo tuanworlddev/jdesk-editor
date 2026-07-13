@@ -1,0 +1,27 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T120153Z-e664",
+  "category" : "e2e-native",
+  "suite" : "real-pty",
+  "status" : "COMPLETE",
+  "startedAtUtc" : "2026-07-13T12:01:53.267781Z",
+  "os" : {
+    "name" : "Mac OS X",
+    "version" : "26.5.1",
+    "arch" : "aarch64"
+  },
+  "versions" : {
+    "java" : "25.0.3"
+  },
+  "appCommit" : "23a420bd0a35aedf6f80cd35ddf30b2f90b870c4",
+  "appDirty" : true,
+  "jdeskSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "jdeskDirty" : false,
+  "jdeskPinnedSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "webView" : {
+    "backend" : "macos-wkwebview"
+  },
+  "endedAtUtc" : "2026-07-13T12:01:55.517086Z",
+  "outcome" : "PASS",
+  "testIds" : [ "PTY-E2E-01-open", "PTY-E2E-02-output", "PTY-E2E-03-exit-code" ]
+}
