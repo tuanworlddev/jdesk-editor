@@ -20,4 +20,6 @@ val jdeskSource: String by settings
 includeBuild(jdeskSource)
 
 include(":evidence-core")
+include(":editor-api")
+include(":editor-core")
 include(":e2e:gate-app")
