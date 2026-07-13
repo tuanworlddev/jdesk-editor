@@ -6,7 +6,7 @@ import { useStore } from './store';
 import { onDirtyChange, getModel, flushNow, javaVersion, hasModel, applyAuthoritativeContent, jsSha256 } from './models';
 import { applyTransaction } from './presentation';
 import { monaco as monacoRef } from './monaco-setup';
-import { on } from './ipc';
+import { on, commands } from './ipc';
 import './styles.css';
 
 // Bridge model dirty-state changes into the tab store (kept out of React's render path).
@@ -114,6 +114,44 @@ useStore.getState().refreshWorkspace().catch(() => {});
 
 const modeResults: Record<string, string> = {};
 (window as unknown as { __modeResults: unknown }).__modeResults = modeResults;
+
+// Performance probe (spec §22): times command round-trips and warm file-opens, recording
+// percentiles the perf acceptance reads. Fire-and-poll because /evaluate cannot await.
+const perfResults: Record<string, unknown> = {};
+(window as unknown as { __perfResults: unknown }).__perfResults = perfResults;
+(window as unknown as { __perf: unknown }).__perf = {
+  commandRoundtrip(n: number) {
+    void (async () => {
+      const times: number[] = [];
+      for (let i = 0; i < n; i++) {
+        const t = performance.now();
+        await commands.workspace.getState();
+        times.push(performance.now() - t);
+      }
+      perfResults['commandRoundtrip'] = percentiles(times);
+    })();
+    return true;
+  },
+  warmFileOpen(relPath: string, n: number) {
+    void (async () => {
+      await commands.doc.open({ relPath }); // warm once
+      const times: number[] = [];
+      for (let i = 0; i < n; i++) {
+        const t = performance.now();
+        await commands.doc.open({ relPath });
+        times.push(performance.now() - t);
+      }
+      perfResults['warmFileOpen'] = percentiles(times);
+    })();
+    return true;
+  },
+};
+
+function percentiles(times: number[]) {
+  const sorted = [...times].sort((a, b) => a - b);
+  const at = (p: number) => sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * p))];
+  return { n: sorted.length, p50: at(0.5), p95: at(0.95), p99: at(0.99), max: sorted[sorted.length - 1] };
+}
 
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

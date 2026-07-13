@@ -49,6 +49,8 @@ full `clean check`) live in `docs/JDESK_AUDIT.md`, not this table.
 | MODE-LIVE | ✅ PASS | `docs/verification/runs/20260713T121445Z-a099` | LIVE final hash=cbefee51401c expected=cbefee51401c |
 | MODE-byte-identical | ✅ PASS | `docs/verification/runs/20260713T121445Z-a099` | all three modes produced identical final content: True (cbefee51401c41118aa650f977803d11637715bc95867bd2e0cf5fe0bbf250af) |
 | P0D-AGENT-PROBES | ✅ PASS | `docs/verification/runs/20260713T103004Z-5b9b` | wrapped command: bash scripts/phase0-agent-probes.sh |
+| PERF-01-command-ack-p95 | ✅ PASS | `docs/verification/runs/20260713T121732Z-7b3c` | command round-trip p50=1.00ms p95=1.00ms (target p95<75ms) |
+| PERF-02-warm-file-open-recorded | ✅ PASS | `docs/verification/runs/20260713T121732Z-7b3c` | warm open p50=1.00ms p95=1.00ms |
 | PHASE5-UNIT | ✅ PASS | `docs/verification/runs/20260713T115849Z-718f` | wrapped command: ./gradlew :editor-core:test :terminal-service:test :git-service:test :language-services:test --console=plain --rerun-tasks |
 | PKG-01-build | ✅ PASS | `docs/verification/runs/20260713T120727Z-337d` | jdeskPackage+jdeskInstaller exit=0, launcher present=yes |
 | PKG-02-appimage-launch | ✅ PASS | `docs/verification/runs/20260713T120727Z-337d` | packaged app-image launched, self-checked, exit 0 |
