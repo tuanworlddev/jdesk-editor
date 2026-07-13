@@ -115,6 +115,29 @@ useStore.getState().refreshWorkspace().catch(() => {});
 const modeResults: Record<string, string> = {};
 (window as unknown as { __modeResults: unknown }).__modeResults = modeResults;
 
+// Embedded agent driver + probe: the running editor starts and observes a managed Claude session
+// (spec §15). Fire-and-poll because /evaluate cannot await.
+let agentSessionId: string | null = null;
+let agentStatus: unknown = null;
+(window as unknown as { __agentDriver: unknown }).__agentDriver = {
+  start(prompt: string) {
+    void commands.agent.startClaude({ prompt }).then((s) => {
+      agentSessionId = s.sessionId;
+      useStore.getState().setStatus(`Agent ${s.sessionId} started`);
+    });
+    return true;
+  },
+  refreshStatus() {
+    if (!agentSessionId) return false;
+    void commands.agent.status({ sessionId: agentSessionId }).then((st) => { agentStatus = st; });
+    return true;
+  },
+};
+(window as unknown as { __agentProbe: unknown }).__agentProbe = {
+  sessionId: () => agentSessionId,
+  status: () => agentStatus,
+};
+
 // Performance probe (spec §22): times command round-trips and warm file-opens, recording
 // percentiles the perf acceptance reads. Fire-and-poll because /evaluate cannot await.
 const perfResults: Record<string, unknown> = {};

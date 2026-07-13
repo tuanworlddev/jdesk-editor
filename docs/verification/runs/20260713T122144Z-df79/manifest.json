@@ -1,0 +1,27 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T122144Z-df79",
+  "category" : "live-agent",
+  "suite" : "live-embedded-claude",
+  "status" : "COMPLETE",
+  "startedAtUtc" : "2026-07-13T12:21:44.449459Z",
+  "os" : {
+    "name" : "Mac OS X",
+    "version" : "26.5.1",
+    "arch" : "aarch64"
+  },
+  "versions" : {
+    "java" : "25.0.3"
+  },
+  "appCommit" : "fd005d892bff2070512b39a763f30bca6380aaa3",
+  "appDirty" : true,
+  "jdeskSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "jdeskDirty" : false,
+  "jdeskPinnedSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "webView" : {
+    "backend" : "macos-wkwebview"
+  },
+  "endedAtUtc" : "2026-07-13T12:22:13.033371Z",
+  "outcome" : "PASS",
+  "testIds" : [ "LIVE-EMBEDDED-01-managed-session", "LIVE-EMBEDDED-02-mcp-tools", "LIVE-EMBEDDED-03-live-editor", "LIVE-EMBEDDED-04-disk" ]
+}

@@ -43,6 +43,10 @@ full `clean check`) live in `docs/JDESK_AUDIT.md`, not this table.
 | LIVE-CLAUDE-01-tools-called | ✅ PASS | `docs/verification/runs/20260713T113238Z-9501` | Claude called 3 jdesk_editor MCP tool(s): ['mcp__jdesk_editor__file_create', 'mcp__jdesk_editor__editor_apply_workspace_edit', 'mcp__jdesk_editor__editor_save'] |
 | LIVE-CLAUDE-02-file-on-disk | ✅ PASS | `docs/verification/runs/20260713T113238Z-9501` | src/hello.txt exists=True, content='Hello from Claude via MCP\n' |
 | LIVE-CLAUDE-03-turn-completed | ✅ PASS | `docs/verification/runs/20260713T113238Z-9501` | claude result success=True, exit=0 |
+| LIVE-EMBEDDED-01-managed-session | ✅ PASS | `docs/verification/runs/20260713T122144Z-df79` | editor started a managed Claude session: True |
+| LIVE-EMBEDDED-02-mcp-tools | ✅ PASS | `docs/verification/runs/20260713T122144Z-df79` | embedded agent called editor MCP tools: ['mcp__jdesk_editor__editor_apply_workspace_edit', 'mcp__jdesk_editor__editor_save'] |
+| LIVE-EMBEDDED-03-live-editor | ✅ PASS | `docs/verification/runs/20260713T122144Z-df79` | running editor shows the embedded agent's edit: True |
+| LIVE-EMBEDDED-04-disk | ✅ PASS | `docs/verification/runs/20260713T122144Z-df79` | disk reflects the embedded agent's saved edit: True |
 | LSP-IT | ✅ PASS | `docs/verification/runs/20260713T115521Z-4317` | wrapped command: ./gradlew :language-services:test --console=plain --rerun-tasks |
 | MODE-CINEMATIC | ✅ PASS | `docs/verification/runs/20260713T121445Z-a099` | CINEMATIC final hash=cbefee51401c expected=cbefee51401c |
 | MODE-INSTANT | ✅ PASS | `docs/verification/runs/20260713T121445Z-a099` | INSTANT final hash=cbefee51401c expected=cbefee51401c |
