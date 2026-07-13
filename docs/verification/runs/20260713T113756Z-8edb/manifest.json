@@ -1,0 +1,28 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T113756Z-8edb",
+  "category" : "e2e-native",
+  "suite" : "live-agent-editor",
+  "status" : "COMPLETE",
+  "startedAtUtc" : "2026-07-13T11:37:56.065877Z",
+  "os" : {
+    "name" : "Mac OS X",
+    "version" : "26.5.1",
+    "arch" : "aarch64"
+  },
+  "versions" : {
+    "java" : "25.0.3"
+  },
+  "appCommit" : "b3bce8ec260e5cc82e9b10c2c8a9665d2fa47256",
+  "appDirty" : true,
+  "jdeskSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "jdeskDirty" : false,
+  "jdeskPinnedSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "webView" : {
+    "backend" : "macos-wkwebview",
+    "claudeExit" : 0
+  },
+  "endedAtUtc" : "2026-07-13T11:38:28.235337Z",
+  "outcome" : "PASS",
+  "testIds" : [ "LIVE-AGENT-01-mcp-tools", "LIVE-AGENT-02-live-monaco", "LIVE-AGENT-03-disk" ]
+}

@@ -135,3 +135,31 @@ export async function flushNow(uri: string): Promise<void> {
 export function javaVersion(uri: string): number {
   return entries.get(uri)?.javaVersion ?? 0;
 }
+
+/**
+ * Applies a Java-authoritative content update (an agent edit arriving via MCP) to a live model.
+ * Suppresses the change echo so we don't send it back, and re-seats the model to the new content
+ * while preserving cursor/selection where the diff allows.
+ */
+export function applyAuthoritativeContent(uri: string, content: string, version: number) {
+  const entry = entries.get(uri);
+  if (!entry) return;
+  if (entry.model.getValue() === content) {
+    entry.javaVersion = version;
+    return;
+  }
+  entry.suppress = true;
+  try {
+    // Full-range replace via edit op (preserves undo history better than setValue).
+    entry.model.pushEditOperations(
+      [],
+      [{ range: entry.model.getFullModelRange(), text: content }],
+      () => null,
+    );
+  } finally {
+    entry.suppress = false;
+  }
+  entry.javaVersion = version;
+  entry.savedHash = jsSha256(content) === entry.savedHash ? entry.savedHash : entry.savedHash;
+  dirtyListener(uri, isDirty(uri));
+}

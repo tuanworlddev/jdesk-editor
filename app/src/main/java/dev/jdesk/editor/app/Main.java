@@ -1,16 +1,21 @@
 package dev.jdesk.editor.app;
 
+import dev.jdesk.api.ApplicationHandle;
 import dev.jdesk.api.CapabilityGrant;
 import dev.jdesk.api.CapabilitySet;
 import dev.jdesk.api.CommandRegistry;
 import dev.jdesk.api.JDeskApplication;
+import dev.jdesk.api.LifecycleListener;
 import dev.jdesk.api.WindowConfig;
+import dev.jdesk.api.WindowId;
 import dev.jdesk.editor.app.ipc.DocumentFacade;
 import dev.jdesk.editor.app.ipc.DocumentFacadeCommands;
 import dev.jdesk.editor.app.ipc.JDeskCommands;
 import dev.jdesk.editor.app.ipc.WorkspaceFacade;
 import dev.jdesk.editor.app.ipc.WorkspaceFacadeCommands;
+import dev.jdesk.editor.mcp.McpServer;
 
+import java.nio.file.Path;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -47,11 +52,44 @@ public final class Main {
         CapabilitySet capabilities = CapabilitySet.of(Set.of(
                 CapabilityGrant.forAllWindows("editor:core")));
 
+        // The MCP server lets agents drive the running editor. Enabled with automation (E2E) or
+        // -Djdesk.editor.mcp=true. Started at onReady so agent edits can push into the live window.
+        boolean mcpEnabled = Boolean.getBoolean("jdesk.editor.mcp") || Boolean.getBoolean("jdesk.automation");
+        AtomicReference<McpServer> mcpRef = new AtomicReference<>();
+
+        LifecycleListener lifecycle = new LifecycleListener() {
+            @Override
+            public void onReady(ApplicationHandle application) {
+                if (!mcpEnabled) {
+                    return;
+                }
+                AppEditorBridge bridge = new AppEditorBridge(current::get, event ->
+                        application.window(new WindowId("main"))
+                                .ifPresent(w -> w.events().emit("editor.docChanged", event)));
+                Path mcpDir = Path.of(System.getProperty("jdesk.editor.mcp.dir",
+                        System.getProperty("java.io.tmpdir") + "/jdesk-editor-mcp"));
+                McpServer server = new McpServer(bridge, mcpDir.resolve("discovery.json"));
+                server.start();
+                writeMcpConfig(mcpDir, server);
+                mcpRef.set(server);
+                System.out.println("MCP-READY " + server.url());
+            }
+
+            @Override
+            public void onStopping() {
+                McpServer server = mcpRef.get();
+                if (server != null) {
+                    server.close();
+                }
+            }
+        };
+
         int exit = JDeskApplication.builder()
                 .id("dev.jdesk.editor")
                 .commands(registry)
                 .capabilities(capabilities)
                 .contentSecurityPolicy(csp)
+                .lifecycle(lifecycle)
                 .window(WindowConfig.builder()
                         .id("main")
                         .title("JDesk Editor")
@@ -60,6 +98,18 @@ public final class Main {
                         .build())
                 .run(args);
         System.exit(exit);
+    }
+
+    private static void writeMcpConfig(Path mcpDir, McpServer server) {
+        try {
+            java.nio.file.Files.createDirectories(mcpDir);
+            String config = "{\"mcpServers\":{\"jdesk_editor\":{\"type\":\"http\",\"url\":\""
+                    + server.url() + "\",\"headers\":{\"Authorization\":\"Bearer " + server.token()
+                    + "\"}}}}";
+            java.nio.file.Files.writeString(mcpDir.resolve("mcp-config.json"), config);
+        } catch (java.io.IOException e) {
+            System.err.println("Failed writing MCP config: " + e);
+        }
     }
 
     private static String argValue(String[] args, String name) {
