@@ -64,5 +64,6 @@ full `clean check`) live in `docs/JDESK_AUDIT.md`, not this table.
 | S3 | ✅ PASS | `docs/verification/runs/20260713T105336Z-e06d` | edit txn version 1->2, jsHash=5e6edbcb63ed… |
 | S3-JAVA | ✅ PASS | `docs/verification/runs/20260713T105336Z-e06d` | java MessageDigest SHA-256 == frontend @noble/hashes SHA-256: true (39bf88532263…) |
 | S4 | ✅ PASS | `docs/verification/runs/20260713T105336Z-e06d` | single undo restores pre-txn hash: true |
+| SECURITY-TESTS | ✅ PASS | `docs/verification/runs/20260713T121838Z-995a` | wrapped command: ./gradlew :editor-core:test --tests *PathServiceTest :agent-mcp:test :evidence-core:test --tests *RedactorTest --console=plain --rerun-tasks |
 
 <!-- END GENERATED:acceptance -->
