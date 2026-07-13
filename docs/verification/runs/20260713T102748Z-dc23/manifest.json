@@ -1,0 +1,24 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T102748Z-dc23",
+  "category" : "jdesk-audit",
+  "suite" : "jdesk-unit-check-macos",
+  "status" : "COMPLETE",
+  "startedAtUtc" : "2026-07-13T10:27:48.721420Z",
+  "os" : {
+    "name" : "Mac OS X",
+    "version" : "26.5.1",
+    "arch" : "aarch64"
+  },
+  "versions" : {
+    "java" : "25.0.3"
+  },
+  "appCommit" : "a5342ddf996f169b5c282f55dcf24fdadf638d26",
+  "appDirty" : true,
+  "jdeskSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "jdeskDirty" : false,
+  "jdeskPinnedSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "endedAtUtc" : "2026-07-13T10:28:04.591270Z",
+  "outcome" : "PASS",
+  "testIds" : [ "JDESK-CHECK-MACOS" ]
+}

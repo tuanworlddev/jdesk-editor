@@ -8,8 +8,9 @@ node_modules/
 ui/dist/
 e2e/gate-app/ui/dist/
 
-# Evidence runs are never committed (cited stubs live in docs/verification/runs/)
-artifacts/test-runs/
+# artifacts/ holds transient evidence runs and regenerable protocol dumps.
+# Cited run stubs live in docs/verification/runs/; committed protocol reference in test-fixtures/.
+artifacts/
 
 # Local-only files
 *.local.json

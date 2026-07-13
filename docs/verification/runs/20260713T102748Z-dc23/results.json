@@ -1,0 +1,18 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T102748Z-dc23",
+  "suite" : "jdesk-unit-check-macos",
+  "tests" : [ {
+    "id" : "JDESK-CHECK-MACOS",
+    "outcome" : "PASS",
+    "durationMs" : 15757,
+    "evidence" : [ "commands.jsonl", "commands/005-stdout.txt" ],
+    "detail" : "wrapped command: /Users/rupphi/Projects/JDESK/JDesk/gradlew -p /Users/rupphi/Projects/JDESK/JDesk check -x :modules:jdesk-platform-windows:test --console=plain --no-daemon"
+  } ],
+  "summary" : {
+    "pass" : 1,
+    "fail" : 0,
+    "blocked" : 0
+  },
+  "overall" : "PASS"
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T103116Z-b8b4",
+  "category" : "jdesk-audit",
+  "suite" : "jdesk-security-probe-macos",
+  "status" : "COMPLETE",
+  "startedAtUtc" : "2026-07-13T10:31:16.439655Z",
+  "os" : {
+    "name" : "Mac OS X",
+    "version" : "26.5.1",
+    "arch" : "aarch64"
+  },
+  "versions" : {
+    "java" : "25.0.3"
+  },
+  "appCommit" : "a5342ddf996f169b5c282f55dcf24fdadf638d26",
+  "appDirty" : true,
+  "jdeskSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "jdeskDirty" : false,
+  "jdeskPinnedSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "endedAtUtc" : "2026-07-13T10:31:22.457896Z",
+  "outcome" : "PASS",
+  "testIds" : [ "JDESK-SECURITY-PROBE" ]
+}

@@ -1,0 +1,18 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T103004Z-5b9b",
+  "suite" : "phase0-agent-handshakes",
+  "tests" : [ {
+    "id" : "P0D-AGENT-PROBES",
+    "outcome" : "PASS",
+    "durationMs" : 10259,
+    "evidence" : [ "commands.jsonl", "commands/005-stdout.txt", "commands/005-stderr.txt" ],
+    "detail" : "wrapped command: bash scripts/phase0-agent-probes.sh"
+  } ],
+  "summary" : {
+    "pass" : 1,
+    "fail" : 0,
+    "blocked" : 0
+  },
+  "overall" : "PASS"
+}

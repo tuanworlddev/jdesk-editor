@@ -1,0 +1,24 @@
+{
+  "header": {
+    "fixture": true,
+    "recordedAt": "2026-07-13T10:29:47.714988+00:00",
+    "cli": "codex",
+    "cliVersion": "0.144.1",
+    "note": "parser-evidence-only: real app-server initialize handshake; proves protocol reachability, NOT live integration"
+  },
+  "handshake": {
+    "probe": "codex-initialize",
+    "ok": true,
+    "platformOs": "macos",
+    "platformFamily": "unix",
+    "userAgent": "jdesk-editor-probe/0.144.1 (Mac OS 26.5.1; arm64) vscode/1.128.0 (jdesk-editor-probe; 0.0.1)",
+    "hasCodexHome": true,
+    "events": [
+      {
+        "method": null,
+        "id": 1,
+        "kind": "response"
+      }
+    ]
+  }
+}

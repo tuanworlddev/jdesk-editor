@@ -1,0 +1,18 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T103116Z-b8b4",
+  "suite" : "jdesk-security-probe-macos",
+  "tests" : [ {
+    "id" : "JDESK-SECURITY-PROBE",
+    "outcome" : "PASS",
+    "durationMs" : 5924,
+    "evidence" : [ "commands.jsonl", "commands/005-stdout.txt", "commands/005-stderr.txt" ],
+    "detail" : "wrapped command: /Users/rupphi/Projects/JDESK/JDesk/gradlew -p /Users/rupphi/Projects/JDESK/JDesk --no-configuration-cache :test-apps:security-probe:run -PjdeskPlatform=macos --console=plain --no-daemon"
+  } ],
+  "summary" : {
+    "pass" : 1,
+    "fail" : 0,
+    "blocked" : 0
+  },
+  "overall" : "PASS"
+}

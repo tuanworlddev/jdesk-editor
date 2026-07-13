@@ -98,6 +98,39 @@ public final class RunVerifier {
         return violations;
     }
 
+    /**
+     * Lighter check for a cited stub under {@code docs/verification/runs/<runId>/}. A stub keeps
+     * only manifest.json, results.json and the original run's checksums.sha256 (as a record of
+     * what the full run hashed to), so the full file-level checksum audit does not apply — git
+     * history is the stub's tamper anchor. This confirms the stub is well-formed and its recorded
+     * manifest outcome agrees with its results.
+     */
+    public List<Violation> verifyCitedStub(Path stubDir) {
+        List<Violation> violations = new ArrayList<>();
+        String runId = stubDir.getFileName().toString();
+        Path manifestFile = stubDir.resolve("manifest.json");
+        Path resultsFile = stubDir.resolve("results.json");
+        if (!Files.exists(manifestFile) || !Files.exists(resultsFile)) {
+            violations.add(new Violation(runId, "stub-incomplete", "missing manifest.json or results.json"));
+            return violations;
+        }
+        JsonNode manifest = JsonIo.read(manifestFile);
+        JsonNode results = JsonIo.read(resultsFile);
+        if (!"COMPLETE".equals(manifest.path("status").asText(""))) {
+            violations.add(new Violation(runId, "stub-incomplete", "manifest status is not COMPLETE"));
+        }
+        if (!results.path("tests").isArray() || results.path("tests").isEmpty()) {
+            violations.add(new Violation(runId, "stub-no-tests", "results.json has no tests"));
+        }
+        String manifestOutcome = manifest.path("outcome").asText("");
+        String resultsOverall = results.path("overall").asText("");
+        if (!manifestOutcome.isEmpty() && !manifestOutcome.equals(resultsOverall)) {
+            violations.add(new Violation(runId, "stub-outcome-mismatch",
+                    "manifest outcome '" + manifestOutcome + "' != results overall '" + resultsOverall + "'"));
+        }
+        return violations;
+    }
+
     /** Verifies every run under {@code artifacts/test-runs}, returning all violations. */
     public List<Violation> verifyAll(Path testRunsDir) {
         if (!Files.isDirectory(testRunsDir)) {
