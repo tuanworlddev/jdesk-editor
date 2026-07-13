@@ -187,6 +187,12 @@ let agentStatus: unknown = null;
 (window as unknown as { __agentProbe: unknown }).__agentProbe = {
   sessionId: () => agentSessionId,
   status: () => agentStatus,
+  pointerEverShown: () => useStore.getState().pointerEverShown,
+  terminalOutput: () => {
+    // Concatenated text of the visible xterm buffer, for terminal assertions.
+    const term = document.querySelector('.xterm-rows');
+    return term ? (term as HTMLElement).innerText : '';
+  },
 };
 
 // Performance probe (spec §22): times command round-trips and warm file-opens, recording

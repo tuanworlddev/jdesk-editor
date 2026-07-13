@@ -1,0 +1,27 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T125810Z-f8ec",
+  "category" : "live-agent",
+  "suite" : "live-ui-full",
+  "status" : "COMPLETE",
+  "startedAtUtc" : "2026-07-13T12:58:10.999936Z",
+  "os" : {
+    "name" : "Mac OS X",
+    "version" : "26.5.1",
+    "arch" : "aarch64"
+  },
+  "versions" : {
+    "java" : "25.0.3"
+  },
+  "appCommit" : "60d02819053bf01ca223ae31013d00e91f798954",
+  "appDirty" : true,
+  "jdeskSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "jdeskDirty" : false,
+  "jdeskPinnedSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "webView" : {
+    "backend" : "macos-wkwebview"
+  },
+  "endedAtUtc" : "2026-07-13T12:58:45.632844Z",
+  "outcome" : "PASS",
+  "testIds" : [ "LIVE-UI-01-chrome", "LIVE-UI-02-terminal", "LIVE-UI-03-embedded-session", "LIVE-UI-04-mcp-tools", "LIVE-UI-05-live-editor", "LIVE-UI-06-pointer-follow", "LIVE-UI-07-disk", "LIVE-UI-08-console-clean" ]
+}

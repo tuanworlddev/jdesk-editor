@@ -52,6 +52,14 @@ full `clean check`) live in `docs/JDESK_AUDIT.md`, not this table.
 | LIVE-EMBEDDED-02-mcp-tools | ✅ PASS | `docs/verification/runs/20260713T122144Z-df79` | embedded agent called editor MCP tools: ['mcp__jdesk_editor__editor_apply_workspace_edit', 'mcp__jdesk_editor__editor_save'] |
 | LIVE-EMBEDDED-03-live-editor | ✅ PASS | `docs/verification/runs/20260713T122144Z-df79` | running editor shows the embedded agent's edit: True |
 | LIVE-EMBEDDED-04-disk | ✅ PASS | `docs/verification/runs/20260713T122144Z-df79` | disk reflects the embedded agent's saved edit: True |
+| LIVE-UI-01-chrome | ✅ PASS | `docs/verification/runs/20260713T125810Z-f8ec` | activity buttons=5, agent input=True, mdi svgs=12 |
+| LIVE-UI-02-terminal | ✅ PASS | `docs/verification/runs/20260713T125810Z-f8ec` | real PTY ran the command; marker in xterm buffer: True |
+| LIVE-UI-03-embedded-session | ✅ PASS | `docs/verification/runs/20260713T125810Z-f8ec` | editor started a managed Claude session: True |
+| LIVE-UI-04-mcp-tools | ✅ PASS | `docs/verification/runs/20260713T125810Z-f8ec` | embedded agent called editor MCP tools: ['mcp__jdesk_editor__editor_apply_workspace_edit', 'mcp__jdesk_editor__editor_save'] |
+| LIVE-UI-05-live-editor | ✅ PASS | `docs/verification/runs/20260713T125810Z-f8ec` | agent edit appeared live in the editor: True |
+| LIVE-UI-06-pointer-follow | ✅ PASS | `docs/verification/runs/20260713T125810Z-f8ec` | agent pointer was shown during the streaming edit: True |
+| LIVE-UI-07-disk | ✅ PASS | `docs/verification/runs/20260713T125810Z-f8ec` | disk reflects the agent's saved edit: True |
+| LIVE-UI-08-console-clean | ✅ PASS | `docs/verification/runs/20260713T125810Z-f8ec` | genuine console errors: 0 |
 | LSP-IT | ✅ PASS | `docs/verification/runs/20260713T115521Z-4317` | wrapped command: ./gradlew :language-services:test --console=plain --rerun-tasks |
 | MODE-CINEMATIC | ✅ PASS | `docs/verification/runs/20260713T121445Z-a099` | CINEMATIC final hash=cbefee51401c expected=cbefee51401c |
 | MODE-INSTANT | ✅ PASS | `docs/verification/runs/20260713T121445Z-a099` | INSTANT final hash=cbefee51401c expected=cbefee51401c |

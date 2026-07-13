@@ -1,0 +1,60 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T125810Z-f8ec",
+  "suite" : "live-ui-full",
+  "tests" : [ {
+    "id" : "LIVE-UI-01-chrome",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/final.png" ],
+    "detail" : "activity buttons=5, agent input=True, mdi svgs=12"
+  }, {
+    "id" : "LIVE-UI-02-terminal",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/final.png" ],
+    "detail" : "real PTY ran the command; marker in xterm buffer: True"
+  }, {
+    "id" : "LIVE-UI-03-embedded-session",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/final.png" ],
+    "detail" : "editor started a managed Claude session: True"
+  }, {
+    "id" : "LIVE-UI-04-mcp-tools",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/final.png" ],
+    "detail" : "embedded agent called editor MCP tools: ['mcp__jdesk_editor__editor_apply_workspace_edit', 'mcp__jdesk_editor__editor_save']"
+  }, {
+    "id" : "LIVE-UI-05-live-editor",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/final.png" ],
+    "detail" : "agent edit appeared live in the editor: True"
+  }, {
+    "id" : "LIVE-UI-06-pointer-follow",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/final.png" ],
+    "detail" : "agent pointer was shown during the streaming edit: True"
+  }, {
+    "id" : "LIVE-UI-07-disk",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/final.png" ],
+    "detail" : "disk reflects the agent's saved edit: True"
+  }, {
+    "id" : "LIVE-UI-08-console-clean",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/final.png" ],
+    "detail" : "genuine console errors: 0"
+  } ],
+  "summary" : {
+    "pass" : 8,
+    "fail" : 0,
+    "blocked" : 0
+  },
+  "overall" : "PASS"
+}

@@ -17,6 +17,7 @@ interface EditorStore {
   activeUri: string | null;
   statusMessage: string;
   pointer: { visible: boolean; x: number; y: number; label: string; color: string };
+  pointerEverShown: boolean;
 
   openWorkspace(path: string): Promise<void>;
   refreshWorkspace(): Promise<void>;
@@ -42,6 +43,7 @@ export const useStore = create<EditorStore>((set, get) => ({
   activeUri: null,
   statusMessage: 'Ready',
   pointer: { visible: false, x: 0, y: 0, label: '', color: '#4dd6c1' },
+  pointerEverShown: false,
 
   async openWorkspace(path: string) {
     const state = await commands.workspace.open({ path });
@@ -137,7 +139,7 @@ export const useStore = create<EditorStore>((set, get) => ({
   },
 
   showPointer(x: number, y: number, label: string, color: string) {
-    set({ pointer: { visible: true, x, y, label, color } });
+    set({ pointer: { visible: true, x, y, label, color }, pointerEverShown: true });
   },
 
   hidePointer() {
