@@ -1,0 +1,42 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T105336Z-e06d",
+  "suite" : "semantic-micro-proof",
+  "tests" : [ {
+    "id" : "S1",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "console.json", "screenshots/gate.png" ],
+    "detail" : "3 nodes registered, revision 3"
+  }, {
+    "id" : "S2",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "console.json", "screenshots/gate.png" ],
+    "detail" : "pointer center inside gate.newFile = true"
+  }, {
+    "id" : "S3",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "console.json", "screenshots/gate.png" ],
+    "detail" : "edit txn version 1->2, jsHash=5e6edbcb63ed…"
+  }, {
+    "id" : "S4",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "console.json", "screenshots/gate.png" ],
+    "detail" : "single undo restores pre-txn hash: true"
+  }, {
+    "id" : "S3-JAVA",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json" ],
+    "detail" : "java MessageDigest SHA-256 == frontend @noble/hashes SHA-256: true (39bf88532263…)"
+  } ],
+  "summary" : {
+    "pass" : 5,
+    "fail" : 0,
+    "blocked" : 0
+  },
+  "overall" : "PASS"
+}

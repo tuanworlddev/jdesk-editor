@@ -1,0 +1,18 @@
+{
+  "name": "jdesk-editor-gate-ui",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite"
+  },
+  "dependencies": {
+    "monaco-editor": "0.52.2",
+    "@noble/hashes": "1.8.0"
+  },
+  "devDependencies": {
+    "vite": "7.1.5",
+    "typescript": "5.9.2"
+  }
+}

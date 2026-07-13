@@ -1,0 +1,29 @@
+# Build outputs
+build/
+.gradle/
+out/
+
+# Frontend
+node_modules/
+ui/dist/
+e2e/gate-app/ui/dist/
+
+# artifacts/ holds transient evidence runs and regenerable protocol dumps.
+# Cited run stubs live in docs/verification/runs/; committed protocol reference in test-fixtures/.
+artifacts/
+
+# Local-only files
+*.local.json
+.DS_Store
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# jqwik property test database
+.jqwik-database
+**/.jqwik-database
+
+# Generated frontend bundle (rebuilt by :e2e:gate-app:frontendBuild)
+e2e/gate-app/src/main/resources/web/
