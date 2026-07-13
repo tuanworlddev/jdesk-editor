@@ -1,0 +1,24 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T121732Z-7b3c",
+  "suite" : "latency-measurement",
+  "tests" : [ {
+    "id" : "PERF-01-command-ack-p95",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "performance-report.md" ],
+    "detail" : "command round-trip p50=1.00ms p95=1.00ms (target p95<75ms)"
+  }, {
+    "id" : "PERF-02-warm-file-open-recorded",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "performance-report.md" ],
+    "detail" : "warm open p50=1.00ms p95=1.00ms"
+  } ],
+  "summary" : {
+    "pass" : 2,
+    "fail" : 0,
+    "blocked" : 0
+  },
+  "overall" : "PASS"
+}

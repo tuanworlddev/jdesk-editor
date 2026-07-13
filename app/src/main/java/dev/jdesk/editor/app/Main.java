@@ -29,9 +29,21 @@ public final class Main {
     private Main() {}
 
     public static void main(String[] args) {
+        // Asset serving is normally configured by the launcher: `gradle run` sets
+        // jdesk.assets.dir; jdeskPackage sets jdesk.assets.classpath=web (classpath image). Only if
+        // none is set (e.g. a bare `java -jar`) do we fall back to this module's bundled web/.
+        if (System.getProperty("jdesk.assets.dir") == null
+                && System.getProperty("jdesk.assets.module") == null
+                && System.getProperty("jdesk.assets.classpath") == null) {
+            System.setProperty("jdesk.assets.classpath", "web");
+        }
+
         // Monaco needs style-src 'unsafe-inline' (dynamic <style> nodes) and worker-src for its
         // workers; script-src stays 'self' with no unsafe-eval (proven by the Phase-0 gate).
         System.setProperty("jdesk.security.acknowledgeUnsafeCsp", "true");
+
+        // Packaged smoke test: boot the real app-image, confirm the window loads the editor, exit 0.
+        boolean smoke = has(args, "--jdesk-smoke");
         String csp = "default-src 'self'; script-src 'self'; worker-src 'self' blob:; "
                 + "style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; "
                 + "connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'";
@@ -42,7 +54,14 @@ public final class Main {
             current.set(new EditorSession(java.nio.file.Path.of(startupWorkspace)));
         }
 
-        WorkspaceFacade workspace = new WorkspaceFacade(current::get, current::set);
+        AtomicReference<ApplicationHandle> handleRef = new AtomicReference<>();
+        AtomicReference<WorkspaceWatchService> watcherRef = new AtomicReference<>();
+        java.util.function.Consumer<EditorSession> onOpen = opened -> {
+            current.set(opened);
+            startWatcher(handleRef.get(), opened, watcherRef);
+        };
+
+        WorkspaceFacade workspace = new WorkspaceFacade(current::get, onOpen);
         DocumentFacade documents = new DocumentFacade(current::get);
 
         CommandRegistry registry = JDeskCommands.combine(
@@ -60,6 +79,29 @@ public final class Main {
         LifecycleListener lifecycle = new LifecycleListener() {
             @Override
             public void onReady(ApplicationHandle application) {
+                if (smoke) {
+                    // The window loaded the editor entry successfully; close it for a clean exit 0.
+                    Thread closer = new Thread(() -> {
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException ignored) {
+                            Thread.currentThread().interrupt();
+                        }
+                        System.out.println("JDESK-EDITOR-SMOKE OK");
+                        application.window(new WindowId("main")).ifPresent(w -> w.close());
+                    }, "smoke-closer");
+                    closer.setDaemon(true);
+                    closer.start();
+                    return;
+                }
+                // Start the filesystem watcher for the current workspace (external-change reload /
+                // dirty-conflict), and re-start it whenever a new folder is opened.
+                handleRef.set(application);
+                EditorSession session = current.get();
+                if (session != null) {
+                    startWatcher(application, session, watcherRef);
+                }
+
                 if (!mcpEnabled) {
                     return;
                 }
@@ -102,6 +144,22 @@ public final class Main {
         System.exit(exit);
     }
 
+    private static void startWatcher(ApplicationHandle handle, EditorSession session,
+            AtomicReference<WorkspaceWatchService> watcherRef) {
+        if (handle == null || session == null) {
+            return;
+        }
+        WorkspaceWatchService previous = watcherRef.getAndSet(null);
+        if (previous != null) {
+            previous.close();
+        }
+        WorkspaceWatchService watcher = new WorkspaceWatchService(handle, session, event ->
+                handle.window(new WindowId("main"))
+                        .ifPresent(w -> w.events().emit("editor.externalChange", event)));
+        watcher.start();
+        watcherRef.set(watcher);
+    }
+
     private static void writeMcpConfig(Path mcpDir, McpServer server) {
         try {
             java.nio.file.Files.createDirectories(mcpDir);
@@ -112,6 +170,15 @@ public final class Main {
         } catch (java.io.IOException e) {
             System.err.println("Failed writing MCP config: " + e);
         }
+    }
+
+    private static boolean has(String[] args, String flag) {
+        for (String arg : args) {
+            if (arg.equals(flag)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static String argValue(String[] args, String name) {

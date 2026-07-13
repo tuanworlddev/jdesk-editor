@@ -20,6 +20,9 @@ full `clean check`) live in `docs/JDESK_AUDIT.md`, not this table.
 | E2E-04-dirty | ✅ PASS | `docs/verification/runs/20260713T111904Z-44ef` | dirty=True |
 | E2E-05-save | ✅ PASS | `docs/verification/runs/20260713T111904Z-44ef` | disk sha256=dbab09cc4c16 expected=dbab09cc4c16 match=True |
 | E2E-06-clean-after-save | ✅ PASS | `docs/verification/runs/20260713T111904Z-44ef` | dirty after save=False |
+| E2E-10-watcher-reload | ✅ PASS | `docs/verification/runs/20260713T121128Z-fe91` | clean doc reloaded from disk to 'externally changed\n' |
+| E2E-10b-labeled-external | ✅ PASS | `docs/verification/runs/20260713T121128Z-fe91` | change labeled origin=external-watcher, state=RELOADED |
+| E2E-11-conflict-no-overwrite | ✅ PASS | `docs/verification/runs/20260713T121128Z-fe91` | dirty buffer preserved on conflict (state=CONFLICT, buffer kept edit=True) |
 | GATE-01 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | base worker computed 1 line change(s); 2 worker(s) spawned |
 | GATE-02 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | TS worker returned 1 semantic diagnostic(s) |
 | GATE-03 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | JSON worker produced 1 schema marker(s) |
@@ -41,8 +44,18 @@ full `clean check`) live in `docs/JDESK_AUDIT.md`, not this table.
 | LIVE-CLAUDE-02-file-on-disk | ✅ PASS | `docs/verification/runs/20260713T113238Z-9501` | src/hello.txt exists=True, content='Hello from Claude via MCP\n' |
 | LIVE-CLAUDE-03-turn-completed | ✅ PASS | `docs/verification/runs/20260713T113238Z-9501` | claude result success=True, exit=0 |
 | LSP-IT | ✅ PASS | `docs/verification/runs/20260713T115521Z-4317` | wrapped command: ./gradlew :language-services:test --console=plain --rerun-tasks |
+| MODE-CINEMATIC | ✅ PASS | `docs/verification/runs/20260713T121445Z-a099` | CINEMATIC final hash=cbefee51401c expected=cbefee51401c |
+| MODE-INSTANT | ✅ PASS | `docs/verification/runs/20260713T121445Z-a099` | INSTANT final hash=cbefee51401c expected=cbefee51401c |
+| MODE-LIVE | ✅ PASS | `docs/verification/runs/20260713T121445Z-a099` | LIVE final hash=cbefee51401c expected=cbefee51401c |
+| MODE-byte-identical | ✅ PASS | `docs/verification/runs/20260713T121445Z-a099` | all three modes produced identical final content: True (cbefee51401c41118aa650f977803d11637715bc95867bd2e0cf5fe0bbf250af) |
 | P0D-AGENT-PROBES | ✅ PASS | `docs/verification/runs/20260713T103004Z-5b9b` | wrapped command: bash scripts/phase0-agent-probes.sh |
+| PERF-01-command-ack-p95 | ✅ PASS | `docs/verification/runs/20260713T121732Z-7b3c` | command round-trip p50=1.00ms p95=1.00ms (target p95<75ms) |
+| PERF-02-warm-file-open-recorded | ✅ PASS | `docs/verification/runs/20260713T121732Z-7b3c` | warm open p50=1.00ms p95=1.00ms |
 | PHASE5-UNIT | ✅ PASS | `docs/verification/runs/20260713T115849Z-718f` | wrapped command: ./gradlew :editor-core:test :terminal-service:test :git-service:test :language-services:test --console=plain --rerun-tasks |
+| PKG-01-build | ✅ PASS | `docs/verification/runs/20260713T120727Z-337d` | jdeskPackage+jdeskInstaller exit=0, launcher present=yes |
+| PKG-02-appimage-launch | ✅ PASS | `docs/verification/runs/20260713T120727Z-337d` | packaged app-image launched, self-checked, exit 0 |
+| PKG-03-no-automation | ✅ PASS | `docs/verification/runs/20260713T120727Z-337d` | production package excludes jdesk-automation (found=0) |
+| PKG-04-dmg-launch | ✅ PASS | `docs/verification/runs/20260713T120727Z-337d` | DMG mounted, .app copied out and launched with exit 0 |
 | PTY-E2E-01-open | ✅ PASS | `docs/verification/runs/20260713T120153Z-e664` | terminal opened: terminal-1 |
 | PTY-E2E-02-output | ✅ PASS | `docs/verification/runs/20260713T120153Z-e664` | marker present in real PTY output: True |
 | PTY-E2E-03-exit-code | ✅ PASS | `docs/verification/runs/20260713T120153Z-e664` | exit code = 7 (expected 7) |

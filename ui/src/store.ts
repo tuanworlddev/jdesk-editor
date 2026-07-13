@@ -26,6 +26,7 @@ interface EditorStore {
   saveActive(): Promise<void>;
   createFile(relPath: string): Promise<void>;
   markTabDirty(uri: string, dirty: boolean): void;
+  setStatus(message: string): void;
 }
 
 export const useStore = create<EditorStore>((set, get) => ({
@@ -112,6 +113,10 @@ export const useStore = create<EditorStore>((set, get) => ({
 
   markTabDirty(uri: string, dirty: boolean) {
     set((s) => ({ tabs: s.tabs.map((t) => (t.uri === uri ? { ...t, dirty } : t)) }));
+  },
+
+  setStatus(message: string) {
+    set({ statusMessage: message });
   },
 }));
 

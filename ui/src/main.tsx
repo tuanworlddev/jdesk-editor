@@ -3,8 +3,10 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import { useStore } from './store';
-import { onDirtyChange, getModel, flushNow, javaVersion, hasModel, applyAuthoritativeContent } from './models';
-import { on } from './ipc';
+import { onDirtyChange, getModel, flushNow, javaVersion, hasModel, applyAuthoritativeContent, jsSha256 } from './models';
+import { applyTransaction } from './presentation';
+import { monaco as monacoRef } from './monaco-setup';
+import { on, commands } from './ipc';
 import './styles.css';
 
 // Bridge model dirty-state changes into the tab store (kept out of React's render path).
@@ -31,6 +33,27 @@ on('editor.docChanged', (payload) => {
     if (rel) void store.openFile(rel).catch(() => {});
   });
 });
+
+// A file changed on disk outside the editor (spec §16). A clean document reloads; a dirty one is
+// marked conflicted and NEVER overwritten. Distinct from an agent's semantic edit above.
+const externalState: Record<string, string> = {};
+on('editor.externalChange', (payload) => {
+  const event = payload as { uri: string; state: string; content: string | null; origin: string };
+  externalState[event.uri] = event.state;
+  if (event.state === 'RELOADED' && event.content !== null && hasModel(event.uri)) {
+    applyAuthoritativeContent(event.uri, event.content, javaVersion(event.uri) + 1);
+    useStore.getState().setStatus(`Reloaded from disk (${event.origin})`);
+  } else if (event.state === 'CONFLICT') {
+    useStore.getState().setStatus(`Conflict: file changed on disk (${event.origin}) — not overwritten`);
+  } else if (event.state === 'DELETED') {
+    useStore.getState().setStatus(`File deleted on disk (${event.origin})`);
+  }
+});
+
+// E2E read-only probe extension for watcher assertions.
+(window as unknown as { __watcherProbe: unknown }).__watcherProbe = {
+  externalState: (uri: string) => externalState[uri] ?? 'NONE',
+};
 
 // Restore the workspace the Java side may have opened at startup (E2E passes --workspace).
 useStore.getState().refreshWorkspace().catch(() => {});
@@ -75,7 +98,60 @@ useStore.getState().refreshWorkspace().catch(() => {});
     await flushNow(uri);
     return javaVersion(uri);
   },
+  // Applies the same staged edit in a presentation mode to a scratch model and records the final
+  // content hash. The Phase-2 acceptance calls this for INSTANT/LIVE/CINEMATIC and asserts the
+  // three hashes are identical (spec §12.4 byte-identical final content).
+  applyMode(base: string, editsJson: string, mode: 'INSTANT' | 'LIVE' | 'CINEMATIC') {
+    const edits = JSON.parse(editsJson);
+    const model = monacoRef.editor.createModel(base, 'plaintext');
+    void applyTransaction(null, model, edits, mode).then(() => {
+      modeResults[mode] = jsSha256(model.getValue());
+      model.dispose();
+    });
+    return true;
+  },
 };
+
+const modeResults: Record<string, string> = {};
+(window as unknown as { __modeResults: unknown }).__modeResults = modeResults;
+
+// Performance probe (spec §22): times command round-trips and warm file-opens, recording
+// percentiles the perf acceptance reads. Fire-and-poll because /evaluate cannot await.
+const perfResults: Record<string, unknown> = {};
+(window as unknown as { __perfResults: unknown }).__perfResults = perfResults;
+(window as unknown as { __perf: unknown }).__perf = {
+  commandRoundtrip(n: number) {
+    void (async () => {
+      const times: number[] = [];
+      for (let i = 0; i < n; i++) {
+        const t = performance.now();
+        await commands.workspace.getState();
+        times.push(performance.now() - t);
+      }
+      perfResults['commandRoundtrip'] = percentiles(times);
+    })();
+    return true;
+  },
+  warmFileOpen(relPath: string, n: number) {
+    void (async () => {
+      await commands.doc.open({ relPath }); // warm once
+      const times: number[] = [];
+      for (let i = 0; i < n; i++) {
+        const t = performance.now();
+        await commands.doc.open({ relPath });
+        times.push(performance.now() - t);
+      }
+      perfResults['warmFileOpen'] = percentiles(times);
+    })();
+    return true;
+  },
+};
+
+function percentiles(times: number[]) {
+  const sorted = [...times].sort((a, b) => a - b);
+  const at = (p: number) => sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * p))];
+  return { n: sorted.length, p50: at(0.5), p95: at(0.95), p99: at(0.99), max: sorted[sorted.length - 1] };
+}
 
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

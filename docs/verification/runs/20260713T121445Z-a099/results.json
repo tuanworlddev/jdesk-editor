@@ -1,0 +1,36 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T121445Z-a099",
+  "suite" : "presentation-modes",
+  "tests" : [ {
+    "id" : "MODE-INSTANT",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/modes.png" ],
+    "detail" : "INSTANT final hash=cbefee51401c expected=cbefee51401c"
+  }, {
+    "id" : "MODE-LIVE",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/modes.png" ],
+    "detail" : "LIVE final hash=cbefee51401c expected=cbefee51401c"
+  }, {
+    "id" : "MODE-CINEMATIC",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/modes.png" ],
+    "detail" : "CINEMATIC final hash=cbefee51401c expected=cbefee51401c"
+  }, {
+    "id" : "MODE-byte-identical",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/modes.png" ],
+    "detail" : "all three modes produced identical final content: True (cbefee51401c41118aa650f977803d11637715bc95867bd2e0cf5fe0bbf250af)"
+  } ],
+  "summary" : {
+    "pass" : 4,
+    "fail" : 0,
+    "blocked" : 0
+  },
+  "overall" : "PASS"
+}
