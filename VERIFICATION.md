@@ -30,6 +30,7 @@ full `clean check`) live in `docs/JDESK_AUDIT.md`, not this table.
 | GATE-08 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | 3/3 worker asset(s) served as JS (e.g. 'text/javascript; charset=utf-8') |
 | GATE-09 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | csp[221] script-src'self'=true eval-throws=true fn-throws=true no-unsafe-eval=true |
 | GATE-10 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | 0 genuine page error(s), 0 worker/load error(s), 1 benign monaco-cancellation(s) |
+| GIT-IT | ✅ PASS | `docs/verification/runs/20260713T115210Z-01da` | wrapped command: ./gradlew :git-service:test --console=plain --rerun-tasks |
 | JDESK-CHECK-MACOS | ✅ PASS | `docs/verification/runs/20260713T102748Z-dc23` | wrapped command: /Users/rupphi/Projects/JDESK/JDesk/gradlew -p /Users/rupphi/Projects/JDESK/JDesk check -x :modules:jdesk-platform-windows:test --console=plain --no-daemon |
 | JDESK-NATIVE-SMOKE | ✅ PASS | `docs/verification/runs/20260713T103029Z-6ff9` | wrapped command: /Users/rupphi/Projects/JDESK/JDesk/gradlew -p /Users/rupphi/Projects/JDESK/JDesk --no-configuration-cache :test-apps:native-smoke:run -PjdeskPlatform=macos --console=plain --no-daemon |
 | JDESK-SECURITY-PROBE | ✅ PASS | `docs/verification/runs/20260713T103116Z-b8b4` | wrapped command: /Users/rupphi/Projects/JDESK/JDesk/gradlew -p /Users/rupphi/Projects/JDESK/JDesk --no-configuration-cache :test-apps:security-probe:run -PjdeskPlatform=macos --console=plain --no-daemon |
@@ -39,7 +40,12 @@ full `clean check`) live in `docs/JDESK_AUDIT.md`, not this table.
 | LIVE-CLAUDE-01-tools-called | ✅ PASS | `docs/verification/runs/20260713T113238Z-9501` | Claude called 3 jdesk_editor MCP tool(s): ['mcp__jdesk_editor__file_create', 'mcp__jdesk_editor__editor_apply_workspace_edit', 'mcp__jdesk_editor__editor_save'] |
 | LIVE-CLAUDE-02-file-on-disk | ✅ PASS | `docs/verification/runs/20260713T113238Z-9501` | src/hello.txt exists=True, content='Hello from Claude via MCP\n' |
 | LIVE-CLAUDE-03-turn-completed | ✅ PASS | `docs/verification/runs/20260713T113238Z-9501` | claude result success=True, exit=0 |
+| LSP-IT | ✅ PASS | `docs/verification/runs/20260713T115521Z-4317` | wrapped command: ./gradlew :language-services:test --console=plain --rerun-tasks |
 | P0D-AGENT-PROBES | ✅ PASS | `docs/verification/runs/20260713T103004Z-5b9b` | wrapped command: bash scripts/phase0-agent-probes.sh |
+| PHASE5-UNIT | ✅ PASS | `docs/verification/runs/20260713T115849Z-718f` | wrapped command: ./gradlew :editor-core:test :terminal-service:test :git-service:test :language-services:test --console=plain --rerun-tasks |
+| PTY-E2E-01-open | ✅ PASS | `docs/verification/runs/20260713T120153Z-e664` | terminal opened: terminal-1 |
+| PTY-E2E-02-output | ✅ PASS | `docs/verification/runs/20260713T120153Z-e664` | marker present in real PTY output: True |
+| PTY-E2E-03-exit-code | ✅ PASS | `docs/verification/runs/20260713T120153Z-e664` | exit code = 7 (expected 7) |
 | S1 | ✅ PASS | `docs/verification/runs/20260713T105336Z-e06d` | 3 nodes registered, revision 3 |
 | S2 | ✅ PASS | `docs/verification/runs/20260713T105336Z-e06d` | pointer center inside gate.newFile = true |
 | S3 | ✅ PASS | `docs/verification/runs/20260713T105336Z-e06d` | edit txn version 1->2, jsHash=5e6edbcb63ed… |

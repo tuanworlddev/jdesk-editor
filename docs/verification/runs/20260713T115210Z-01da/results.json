@@ -1,0 +1,18 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T115210Z-01da",
+  "suite" : "real-git-acceptance",
+  "tests" : [ {
+    "id" : "GIT-IT",
+    "outcome" : "PASS",
+    "durationMs" : 9458,
+    "evidence" : [ "commands.jsonl", "commands/005-stdout.txt" ],
+    "detail" : "wrapped command: ./gradlew :git-service:test --console=plain --rerun-tasks"
+  } ],
+  "summary" : {
+    "pass" : 1,
+    "fail" : 0,
+    "blocked" : 0
+  },
+  "overall" : "PASS"
+}

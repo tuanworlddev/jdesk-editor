@@ -1,0 +1,18 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T115849Z-718f",
+  "suite" : "phase5-tooling-tests",
+  "tests" : [ {
+    "id" : "PHASE5-UNIT",
+    "outcome" : "PASS",
+    "durationMs" : 7452,
+    "evidence" : [ "commands.jsonl", "commands/005-stdout.txt", "commands/005-stderr.txt" ],
+    "detail" : "wrapped command: ./gradlew :editor-core:test :terminal-service:test :git-service:test :language-services:test --console=plain --rerun-tasks"
+  } ],
+  "summary" : {
+    "pass" : 1,
+    "fail" : 0,
+    "blocked" : 0
+  },
+  "overall" : "PASS"
+}

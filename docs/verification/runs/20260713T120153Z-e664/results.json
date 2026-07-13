@@ -1,0 +1,30 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T120153Z-e664",
+  "suite" : "real-pty",
+  "tests" : [ {
+    "id" : "PTY-E2E-01-open",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/pty.png" ],
+    "detail" : "terminal opened: terminal-1"
+  }, {
+    "id" : "PTY-E2E-02-output",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/pty.png" ],
+    "detail" : "marker present in real PTY output: True"
+  }, {
+    "id" : "PTY-E2E-03-exit-code",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/pty.png" ],
+    "detail" : "exit code = 7 (expected 7)"
+  } ],
+  "summary" : {
+    "pass" : 3,
+    "fail" : 0,
+    "blocked" : 0
+  },
+  "overall" : "PASS"
+}

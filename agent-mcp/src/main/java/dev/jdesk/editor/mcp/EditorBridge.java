@@ -42,4 +42,28 @@ public interface EditorBridge {
     OperationResult save(String relPath);
 
     List<DiagnosticInfo> diagnostics(String relPath);
+
+    // ---- terminal (spec §17) — only the running app supports PTYs; headless bridges opt out ----
+
+    record TerminalRead(String terminalId, String output, boolean alive, Integer exitCode) {}
+
+    default String openTerminal(String command, int cols, int rows) {
+        throw new McpToolException(dev.jdesk.editor.api.EditorErrorCode.AGENT_NOT_AVAILABLE,
+                "Terminals require the running editor");
+    }
+
+    default void writeTerminal(String terminalId, String data) {
+        throw new McpToolException(dev.jdesk.editor.api.EditorErrorCode.AGENT_NOT_AVAILABLE,
+                "Terminals require the running editor");
+    }
+
+    default TerminalRead readTerminal(String terminalId) {
+        throw new McpToolException(dev.jdesk.editor.api.EditorErrorCode.AGENT_NOT_AVAILABLE,
+                "Terminals require the running editor");
+    }
+
+    default void closeTerminal(String terminalId) {
+        throw new McpToolException(dev.jdesk.editor.api.EditorErrorCode.AGENT_NOT_AVAILABLE,
+                "Terminals require the running editor");
+    }
 }

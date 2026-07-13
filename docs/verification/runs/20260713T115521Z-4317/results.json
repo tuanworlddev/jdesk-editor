@@ -1,0 +1,18 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T115521Z-4317",
+  "suite" : "real-lsp-acceptance",
+  "tests" : [ {
+    "id" : "LSP-IT",
+    "outcome" : "PASS",
+    "durationMs" : 7747,
+    "evidence" : [ "commands.jsonl", "commands/005-stdout.txt", "commands/005-stderr.txt" ],
+    "detail" : "wrapped command: ./gradlew :language-services:test --console=plain --rerun-tasks"
+  } ],
+  "summary" : {
+    "pass" : 1,
+    "fail" : 0,
+    "blocked" : 0
+  },
+  "overall" : "PASS"
+}

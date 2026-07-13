@@ -23,10 +23,13 @@ public final class AppEditorBridge implements EditorBridge {
 
     private final Supplier<EditorSession> session;
     private final Consumer<DocChangedEvent> uiSink;
+    private final TerminalManager terminals;
 
-    public AppEditorBridge(Supplier<EditorSession> session, Consumer<DocChangedEvent> uiSink) {
+    public AppEditorBridge(Supplier<EditorSession> session, Consumer<DocChangedEvent> uiSink,
+            TerminalManager terminals) {
         this.session = session;
         this.uiSink = uiSink;
+        this.terminals = terminals;
     }
 
     private EditorBridge delegate() {
@@ -54,4 +57,31 @@ public final class AppEditorBridge implements EditorBridge {
     }
     @Override public OperationResult save(String relPath) { return delegate().save(relPath); }
     @Override public List<DiagnosticInfo> diagnostics(String relPath) { return delegate().diagnostics(relPath); }
+
+    // ---- terminals (real PTYs through the running app) ----
+
+    @Override
+    public String openTerminal(String command, int cols, int rows) {
+        EditorSession current = session.get();
+        var argv = command == null || command.isBlank() ? List.<String>of()
+                : List.of("/bin/sh", "-c", command);
+        return terminals.open(current == null ? null : current.root(), argv, cols, rows);
+    }
+
+    @Override
+    public void writeTerminal(String terminalId, String data) {
+        terminals.write(terminalId, data);
+    }
+
+    @Override
+    public TerminalRead readTerminal(String terminalId) {
+        TerminalManager.TerminalRead read = terminals.read(terminalId);
+        return new TerminalRead(terminalId, read.output(), read.alive(), read.exitCode());
+    }
+
+    @Override
+    public void closeTerminal(String terminalId) {
+        terminals.close(terminalId);
+    }
 }
+

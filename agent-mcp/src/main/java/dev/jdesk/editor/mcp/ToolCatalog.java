@@ -108,6 +108,56 @@ public final class ToolCatalog {
                     }
                     return out;
                 });
+
+        register("terminal_open", "terminal.open",
+                "Open a terminal (PTY) in the workspace and return its id.",
+                schema(prop("command", "string", "Optional shell command; default is the login shell"),
+                        prop("cols", "integer", "Columns (default 80)"),
+                        prop("rows", "integer", "Rows (default 24)")), false,
+                (bridge, args) -> {
+                    String id = bridge.openTerminal(text(args, "command", ""),
+                            args.has("cols") ? args.get("cols").asInt() : 80,
+                            args.has("rows") ? args.get("rows").asInt() : 24);
+                    ObjectNode out = JSON.createObjectNode();
+                    out.put("terminalId", id);
+                    return out;
+                });
+
+        register("terminal_write", "terminal.write",
+                "Write input to a terminal (include a trailing newline to run a command).",
+                schema(prop("terminalId", "string", "Terminal id"),
+                        prop("data", "string", "Bytes to write")), false,
+                (bridge, args) -> {
+                    bridge.writeTerminal(required(args, "terminalId"), text(args, "data", ""));
+                    ObjectNode out = JSON.createObjectNode();
+                    out.put("ok", true);
+                    return out;
+                });
+
+        register("terminal_read", "terminal.read",
+                "Read (and clear) accumulated terminal output; reports liveness and exit code.",
+                schema(prop("terminalId", "string", "Terminal id")), false,
+                (bridge, args) -> {
+                    EditorBridge.TerminalRead read = bridge.readTerminal(required(args, "terminalId"));
+                    ObjectNode out = JSON.createObjectNode();
+                    out.put("terminalId", read.terminalId());
+                    out.put("output", read.output());
+                    out.put("alive", read.alive());
+                    if (read.exitCode() != null) {
+                        out.put("exitCode", read.exitCode());
+                    }
+                    return out;
+                });
+
+        register("terminal_close", "terminal.close",
+                "Close a terminal and terminate its process.",
+                schema(prop("terminalId", "string", "Terminal id")), false,
+                (bridge, args) -> {
+                    bridge.closeTerminal(required(args, "terminalId"));
+                    ObjectNode out = JSON.createObjectNode();
+                    out.put("ok", true);
+                    return out;
+                });
     }
 
     public List<Tool> tools() {
