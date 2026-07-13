@@ -1,0 +1,24 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T122802Z-3243",
+  "suite" : "final-dod-audit",
+  "tests" : [ {
+    "id" : "DOD-version-lint",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "version-lint.log", "gate-results.json" ],
+    "detail" : "no dynamic/latest versions in build files"
+  }, {
+    "id" : "DOD-no-disabled-tests",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json" ],
+    "detail" : "disabled/skipped test markers in product+ui source: 0"
+  } ],
+  "summary" : {
+    "pass" : 2,
+    "fail" : 0,
+    "blocked" : 0
+  },
+  "overall" : "PASS"
+}
