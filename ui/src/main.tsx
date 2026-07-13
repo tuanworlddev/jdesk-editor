@@ -3,7 +3,9 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import { useStore } from './store';
-import { onDirtyChange, getModel, flushNow, javaVersion, hasModel, applyAuthoritativeContent } from './models';
+import { onDirtyChange, getModel, flushNow, javaVersion, hasModel, applyAuthoritativeContent, jsSha256 } from './models';
+import { applyTransaction } from './presentation';
+import { monaco as monacoRef } from './monaco-setup';
 import { on } from './ipc';
 import './styles.css';
 
@@ -96,7 +98,22 @@ useStore.getState().refreshWorkspace().catch(() => {});
     await flushNow(uri);
     return javaVersion(uri);
   },
+  // Applies the same staged edit in a presentation mode to a scratch model and records the final
+  // content hash. The Phase-2 acceptance calls this for INSTANT/LIVE/CINEMATIC and asserts the
+  // three hashes are identical (spec §12.4 byte-identical final content).
+  applyMode(base: string, editsJson: string, mode: 'INSTANT' | 'LIVE' | 'CINEMATIC') {
+    const edits = JSON.parse(editsJson);
+    const model = monacoRef.editor.createModel(base, 'plaintext');
+    void applyTransaction(null, model, edits, mode).then(() => {
+      modeResults[mode] = jsSha256(model.getValue());
+      model.dispose();
+    });
+    return true;
+  },
 };
+
+const modeResults: Record<string, string> = {};
+(window as unknown as { __modeResults: unknown }).__modeResults = modeResults;
 
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

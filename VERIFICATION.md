@@ -44,6 +44,10 @@ full `clean check`) live in `docs/JDESK_AUDIT.md`, not this table.
 | LIVE-CLAUDE-02-file-on-disk | ✅ PASS | `docs/verification/runs/20260713T113238Z-9501` | src/hello.txt exists=True, content='Hello from Claude via MCP\n' |
 | LIVE-CLAUDE-03-turn-completed | ✅ PASS | `docs/verification/runs/20260713T113238Z-9501` | claude result success=True, exit=0 |
 | LSP-IT | ✅ PASS | `docs/verification/runs/20260713T115521Z-4317` | wrapped command: ./gradlew :language-services:test --console=plain --rerun-tasks |
+| MODE-CINEMATIC | ✅ PASS | `docs/verification/runs/20260713T121445Z-a099` | CINEMATIC final hash=cbefee51401c expected=cbefee51401c |
+| MODE-INSTANT | ✅ PASS | `docs/verification/runs/20260713T121445Z-a099` | INSTANT final hash=cbefee51401c expected=cbefee51401c |
+| MODE-LIVE | ✅ PASS | `docs/verification/runs/20260713T121445Z-a099` | LIVE final hash=cbefee51401c expected=cbefee51401c |
+| MODE-byte-identical | ✅ PASS | `docs/verification/runs/20260713T121445Z-a099` | all three modes produced identical final content: True (cbefee51401c41118aa650f977803d11637715bc95867bd2e0cf5fe0bbf250af) |
 | P0D-AGENT-PROBES | ✅ PASS | `docs/verification/runs/20260713T103004Z-5b9b` | wrapped command: bash scripts/phase0-agent-probes.sh |
 | PHASE5-UNIT | ✅ PASS | `docs/verification/runs/20260713T115849Z-718f` | wrapped command: ./gradlew :editor-core:test :terminal-service:test :git-service:test :language-services:test --console=plain --rerun-tasks |
 | PKG-01-build | ✅ PASS | `docs/verification/runs/20260713T120727Z-337d` | jdeskPackage+jdeskInstaller exit=0, launcher present=yes |

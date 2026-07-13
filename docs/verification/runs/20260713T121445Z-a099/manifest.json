@@ -1,0 +1,27 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T121445Z-a099",
+  "category" : "e2e-native",
+  "suite" : "presentation-modes",
+  "status" : "COMPLETE",
+  "startedAtUtc" : "2026-07-13T12:14:45.214053Z",
+  "os" : {
+    "name" : "Mac OS X",
+    "version" : "26.5.1",
+    "arch" : "aarch64"
+  },
+  "versions" : {
+    "java" : "25.0.3"
+  },
+  "appCommit" : "48cfcd4d70a2d3724b8233f7d7ef38ea2968c32a",
+  "appDirty" : true,
+  "jdeskSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "jdeskDirty" : false,
+  "jdeskPinnedSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "webView" : {
+    "backend" : "macos-wkwebview"
+  },
+  "endedAtUtc" : "2026-07-13T12:14:54.403797Z",
+  "outcome" : "PASS",
+  "testIds" : [ "MODE-INSTANT", "MODE-LIVE", "MODE-CINEMATIC", "MODE-byte-identical" ]
+}
