@@ -43,6 +43,10 @@ full `clean check`) live in `docs/JDESK_AUDIT.md`, not this table.
 | LSP-IT | ✅ PASS | `docs/verification/runs/20260713T115521Z-4317` | wrapped command: ./gradlew :language-services:test --console=plain --rerun-tasks |
 | P0D-AGENT-PROBES | ✅ PASS | `docs/verification/runs/20260713T103004Z-5b9b` | wrapped command: bash scripts/phase0-agent-probes.sh |
 | PHASE5-UNIT | ✅ PASS | `docs/verification/runs/20260713T115849Z-718f` | wrapped command: ./gradlew :editor-core:test :terminal-service:test :git-service:test :language-services:test --console=plain --rerun-tasks |
+| PKG-01-build | ✅ PASS | `docs/verification/runs/20260713T120727Z-337d` | jdeskPackage+jdeskInstaller exit=0, launcher present=yes |
+| PKG-02-appimage-launch | ✅ PASS | `docs/verification/runs/20260713T120727Z-337d` | packaged app-image launched, self-checked, exit 0 |
+| PKG-03-no-automation | ✅ PASS | `docs/verification/runs/20260713T120727Z-337d` | production package excludes jdesk-automation (found=0) |
+| PKG-04-dmg-launch | ✅ PASS | `docs/verification/runs/20260713T120727Z-337d` | DMG mounted, .app copied out and launched with exit 0 |
 | PTY-E2E-01-open | ✅ PASS | `docs/verification/runs/20260713T120153Z-e664` | terminal opened: terminal-1 |
 | PTY-E2E-02-output | ✅ PASS | `docs/verification/runs/20260713T120153Z-e664` | marker present in real PTY output: True |
 | PTY-E2E-03-exit-code | ✅ PASS | `docs/verification/runs/20260713T120153Z-e664` | exit code = 7 (expected 7) |

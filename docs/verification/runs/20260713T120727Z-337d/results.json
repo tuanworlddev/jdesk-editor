@@ -1,0 +1,36 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T120727Z-337d",
+  "suite" : "macos-packaging",
+  "tests" : [ {
+    "id" : "PKG-01-build",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "commands.jsonl" ],
+    "detail" : "jdeskPackage+jdeskInstaller exit=0, launcher present=yes"
+  }, {
+    "id" : "PKG-02-appimage-launch",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "commands.jsonl" ],
+    "detail" : "packaged app-image launched, self-checked, exit 0"
+  }, {
+    "id" : "PKG-03-no-automation",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "commands.jsonl" ],
+    "detail" : "production package excludes jdesk-automation (found=0)"
+  }, {
+    "id" : "PKG-04-dmg-launch",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "commands.jsonl" ],
+    "detail" : "DMG mounted, .app copied out and launched with exit 0"
+  } ],
+  "summary" : {
+    "pass" : 4,
+    "fail" : 0,
+    "blocked" : 0
+  },
+  "overall" : "PASS"
+}

@@ -1,0 +1,27 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T120727Z-337d",
+  "category" : "package",
+  "suite" : "macos-packaging",
+  "status" : "COMPLETE",
+  "startedAtUtc" : "2026-07-13T12:07:27.038200Z",
+  "os" : {
+    "name" : "Mac OS X",
+    "version" : "26.5.1",
+    "arch" : "aarch64"
+  },
+  "versions" : {
+    "java" : "25.0.3"
+  },
+  "appCommit" : "e1b3008060ca7c3f1bd558262de165d0f78499d8",
+  "appDirty" : true,
+  "jdeskSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "jdeskDirty" : false,
+  "jdeskPinnedSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "webView" : {
+    "backend" : "macos-wkwebview"
+  },
+  "endedAtUtc" : "2026-07-13T12:07:40.511594Z",
+  "outcome" : "PASS",
+  "testIds" : [ "PKG-01-build", "PKG-02-appimage-launch", "PKG-03-no-automation", "PKG-04-dmg-launch" ]
+}
