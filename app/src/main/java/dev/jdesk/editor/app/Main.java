@@ -63,10 +63,15 @@ public final class Main {
 
         WorkspaceFacade workspace = new WorkspaceFacade(current::get, onOpen);
         DocumentFacade documents = new DocumentFacade(current::get);
+        // The embedded agent uses the editor's own MCP config, written next to the MCP server.
+        AtomicReference<Path> mcpConfigRef = new AtomicReference<>();
+        dev.jdesk.editor.app.ipc.AgentFacade agents =
+                new dev.jdesk.editor.app.ipc.AgentFacade(mcpConfigRef::get);
 
         CommandRegistry registry = JDeskCommands.combine(
                 WorkspaceFacadeCommands.create(workspace),
-                DocumentFacadeCommands.create(documents));
+                DocumentFacadeCommands.create(documents),
+                dev.jdesk.editor.app.ipc.AgentFacadeCommands.create(agents));
 
         CapabilitySet capabilities = CapabilitySet.of(Set.of(
                 CapabilityGrant.forAllWindows("editor:core")));
@@ -115,6 +120,7 @@ public final class Main {
                 McpServer server = new McpServer(bridge, mcpDir.resolve("discovery.json"));
                 server.start();
                 writeMcpConfig(mcpDir, server);
+                mcpConfigRef.set(mcpDir.resolve("mcp-config.json"));
                 mcpRef.set(server);
                 System.out.println("MCP-READY " + server.url());
             }

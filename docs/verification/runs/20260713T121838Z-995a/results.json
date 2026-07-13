@@ -1,0 +1,18 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T121838Z-995a",
+  "suite" : "security-acceptance",
+  "tests" : [ {
+    "id" : "SECURITY-TESTS",
+    "outcome" : "PASS",
+    "durationMs" : 3434,
+    "evidence" : [ "commands.jsonl", "commands/005-stdout.txt", "commands/005-stderr.txt" ],
+    "detail" : "wrapped command: ./gradlew :editor-core:test --tests *PathServiceTest :agent-mcp:test :evidence-core:test --tests *RedactorTest --console=plain --rerun-tasks"
+  } ],
+  "summary" : {
+    "pass" : 1,
+    "fail" : 0,
+    "blocked" : 0
+  },
+  "overall" : "PASS"
+}
