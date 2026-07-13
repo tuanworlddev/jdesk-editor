@@ -1,0 +1,27 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T123317Z-4900",
+  "category" : "e2e-native",
+  "suite" : "undo-redo",
+  "status" : "COMPLETE",
+  "startedAtUtc" : "2026-07-13T12:33:17.285576Z",
+  "os" : {
+    "name" : "Mac OS X",
+    "version" : "26.5.1",
+    "arch" : "aarch64"
+  },
+  "versions" : {
+    "java" : "25.0.3"
+  },
+  "appCommit" : "23a75fb53a3c2bdb92baaf14f0c5a4040e0ba368",
+  "appDirty" : true,
+  "jdeskSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "jdeskDirty" : false,
+  "jdeskPinnedSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "webView" : {
+    "backend" : "macos-wkwebview"
+  },
+  "endedAtUtc" : "2026-07-13T12:33:28.251653Z",
+  "outcome" : "PASS",
+  "testIds" : [ "E2E-09a-edit", "E2E-09b-undo", "E2E-09c-redo" ]
+}

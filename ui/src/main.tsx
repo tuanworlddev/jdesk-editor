@@ -87,11 +87,23 @@ useStore.getState().refreshWorkspace().catch(() => {});
     const model = uri ? getModel(uri) : null;
     if (!model) return false;
     const end = model.getFullModelRange().getEndPosition();
-    model.applyEdits([{ range: { startLineNumber: end.lineNumber, startColumn: end.column,
-      endLineNumber: end.lineNumber, endColumn: end.column }, text }]);
+    // pushEditOperations (not applyEdits) so the edit is a real, undoable operation.
+    model.pushEditOperations([], [{ range: {
+      startLineNumber: end.lineNumber, startColumn: end.column,
+      endLineNumber: end.lineNumber, endColumn: end.column }, text }], () => null);
     return true;
   },
   async save() { await useStore.getState().saveActive(); return true; },
+  undo() {
+    const e = monacoRef.editor.getEditors()[0];
+    if (e) e.trigger('e2e', 'undo', null);
+    return true;
+  },
+  redo() {
+    const e = monacoRef.editor.getEditors()[0];
+    if (e) e.trigger('e2e', 'redo', null);
+    return true;
+  },
   async flushAndVersion() {
     const uri = useStore.getState().activeUri;
     if (!uri) return null;

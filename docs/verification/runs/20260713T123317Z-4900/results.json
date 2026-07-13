@@ -1,0 +1,30 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T123317Z-4900",
+  "suite" : "undo-redo",
+  "tests" : [ {
+    "id" : "E2E-09a-edit",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/undo.png" ],
+    "detail" : "typed edit present: 'base\\nEDIT\\n'"
+  }, {
+    "id" : "E2E-09b-undo",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/undo.png" ],
+    "detail" : "undo restored original (one undo group): 'base\\n'"
+  }, {
+    "id" : "E2E-09c-redo",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "screenshots/undo.png" ],
+    "detail" : "redo restored edit: 'base\\nEDIT\\n'"
+  } ],
+  "summary" : {
+    "pass" : 3,
+    "fail" : 0,
+    "blocked" : 0
+  },
+  "overall" : "PASS"
+}

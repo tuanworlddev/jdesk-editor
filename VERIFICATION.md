@@ -22,6 +22,9 @@ full `clean check`) live in `docs/JDESK_AUDIT.md`, not this table.
 | E2E-04-dirty | ✅ PASS | `docs/verification/runs/20260713T111904Z-44ef` | dirty=True |
 | E2E-05-save | ✅ PASS | `docs/verification/runs/20260713T111904Z-44ef` | disk sha256=dbab09cc4c16 expected=dbab09cc4c16 match=True |
 | E2E-06-clean-after-save | ✅ PASS | `docs/verification/runs/20260713T111904Z-44ef` | dirty after save=False |
+| E2E-09a-edit | ✅ PASS | `docs/verification/runs/20260713T123317Z-4900` | typed edit present: 'base\nEDIT\n' |
+| E2E-09b-undo | ✅ PASS | `docs/verification/runs/20260713T123317Z-4900` | undo restored original (one undo group): 'base\n' |
+| E2E-09c-redo | ✅ PASS | `docs/verification/runs/20260713T123317Z-4900` | redo restored edit: 'base\nEDIT\n' |
 | E2E-10-watcher-reload | ✅ PASS | `docs/verification/runs/20260713T121128Z-fe91` | clean doc reloaded from disk to 'externally changed\n' |
 | E2E-10b-labeled-external | ✅ PASS | `docs/verification/runs/20260713T121128Z-fe91` | change labeled origin=external-watcher, state=RELOADED |
 | E2E-11-conflict-no-overwrite | ✅ PASS | `docs/verification/runs/20260713T121128Z-fe91` | dirty buffer preserved on conflict (state=CONFLICT, buffer kept edit=True) |
