@@ -1,0 +1,30 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T113238Z-9501",
+  "suite" : "live-claude-mcp",
+  "tests" : [ {
+    "id" : "LIVE-CLAUDE-01-tools-called",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "claude-stream.jsonl" ],
+    "detail" : "Claude called 3 jdesk_editor MCP tool(s): ['mcp__jdesk_editor__file_create', 'mcp__jdesk_editor__editor_apply_workspace_edit', 'mcp__jdesk_editor__editor_save']"
+  }, {
+    "id" : "LIVE-CLAUDE-02-file-on-disk",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "claude-stream.jsonl" ],
+    "detail" : "src/hello.txt exists=True, content='Hello from Claude via MCP\\n'"
+  }, {
+    "id" : "LIVE-CLAUDE-03-turn-completed",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "claude-stream.jsonl" ],
+    "detail" : "claude result success=True, exit=0"
+  } ],
+  "summary" : {
+    "pass" : 3,
+    "fail" : 0,
+    "blocked" : 0
+  },
+  "overall" : "PASS"
+}

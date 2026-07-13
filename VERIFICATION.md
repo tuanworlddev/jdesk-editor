@@ -33,6 +33,9 @@ full `clean check`) live in `docs/JDESK_AUDIT.md`, not this table.
 | JDESK-CHECK-MACOS | ✅ PASS | `docs/verification/runs/20260713T102748Z-dc23` | wrapped command: /Users/rupphi/Projects/JDESK/JDesk/gradlew -p /Users/rupphi/Projects/JDESK/JDesk check -x :modules:jdesk-platform-windows:test --console=plain --no-daemon |
 | JDESK-NATIVE-SMOKE | ✅ PASS | `docs/verification/runs/20260713T103029Z-6ff9` | wrapped command: /Users/rupphi/Projects/JDESK/JDesk/gradlew -p /Users/rupphi/Projects/JDESK/JDesk --no-configuration-cache :test-apps:native-smoke:run -PjdeskPlatform=macos --console=plain --no-daemon |
 | JDESK-SECURITY-PROBE | ✅ PASS | `docs/verification/runs/20260713T103116Z-b8b4` | wrapped command: /Users/rupphi/Projects/JDESK/JDesk/gradlew -p /Users/rupphi/Projects/JDESK/JDesk --no-configuration-cache :test-apps:security-probe:run -PjdeskPlatform=macos --console=plain --no-daemon |
+| LIVE-CLAUDE-01-tools-called | ✅ PASS | `docs/verification/runs/20260713T113238Z-9501` | Claude called 3 jdesk_editor MCP tool(s): ['mcp__jdesk_editor__file_create', 'mcp__jdesk_editor__editor_apply_workspace_edit', 'mcp__jdesk_editor__editor_save'] |
+| LIVE-CLAUDE-02-file-on-disk | ✅ PASS | `docs/verification/runs/20260713T113238Z-9501` | src/hello.txt exists=True, content='Hello from Claude via MCP\n' |
+| LIVE-CLAUDE-03-turn-completed | ✅ PASS | `docs/verification/runs/20260713T113238Z-9501` | claude result success=True, exit=0 |
 | P0D-AGENT-PROBES | ✅ PASS | `docs/verification/runs/20260713T103004Z-5b9b` | wrapped command: bash scripts/phase0-agent-probes.sh |
 | S1 | ✅ PASS | `docs/verification/runs/20260713T105336Z-e06d` | 3 nodes registered, revision 3 |
 | S2 | ✅ PASS | `docs/verification/runs/20260713T105336Z-e06d` | pointer center inside gate.newFile = true |

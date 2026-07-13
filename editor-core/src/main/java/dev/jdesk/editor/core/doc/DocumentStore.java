@@ -71,8 +71,9 @@ public final class DocumentStore {
         }
     }
 
-    /** Creates a new empty file on disk and opens it. */
+    /** Creates a new empty file on disk (making any missing parent directories) and opens it. */
     public synchronized EditorDocument create(String relativePath) {
+        paths.ensureParentDirectories(relativePath);
         WorkspacePath path = paths.resolveForCreate(relativePath);
         try {
             if (Files.exists(path.absolute())) {
