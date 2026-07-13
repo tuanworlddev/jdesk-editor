@@ -7,7 +7,8 @@ public final class AgentDtos {
 
     private AgentDtos() {}
 
-    public record StartRequest(String prompt) {}
+    /** provider is "claude" or "codex" (defaults to claude when blank). */
+    public record StartRequest(String prompt, String provider) {}
 
     public record AgentSession(String sessionId, String provider) {}
 

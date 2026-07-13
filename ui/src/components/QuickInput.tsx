@@ -65,14 +65,14 @@ export function QuickInput({ mode, cmds, onClose }: { mode: QuickMode; cmds: Com
   }
 
   return (
-    <div className="fixed inset-0 z-[10000] flex justify-center pt-[10vh]" onMouseDown={onClose}>
-      <div className="h-fit w-[560px] max-w-[90vw] overflow-hidden rounded-lg border border-[--color-border]
-        bg-[--color-panel] shadow-2xl" onMouseDown={(e) => e.stopPropagation()}>
-        <div className="flex items-center gap-2 border-b border-[--color-border] px-3 py-2">
-          <Icon path={mode === 'commands' ? mdiConsoleLine : mdiMagnify} size={16} className="text-[--color-fg-dim]" />
+    <div className="fixed inset-0 z-[10000] flex justify-center bg-black/50 pt-[10vh]" onMouseDown={onClose}>
+      <div className="h-fit w-[560px] max-w-[90vw] overflow-hidden rounded-lg border border-[var(--color-accent-dim)]
+        bg-[var(--color-bg-elev)] shadow-2xl ring-1 ring-black/40" onMouseDown={(e) => e.stopPropagation()}>
+        <div className="flex items-center gap-2 border-b border-[var(--color-border)] px-3 py-2">
+          <Icon path={mode === 'commands' ? mdiConsoleLine : mdiMagnify} size={16} className="text-[var(--color-fg-dim)]" />
           <input ref={inputRef} value={query} onChange={(e) => setQuery(e.target.value)}
             placeholder={mode === 'commands' ? 'Type a command…' : 'Search files by name…'}
-            className="flex-1 bg-transparent text-[13px] text-[--color-fg] outline-none"
+            className="flex-1 bg-transparent text-[13px] text-[var(--color-fg)] outline-none"
             onKeyDown={(e) => {
               if (e.key === 'ArrowDown') { e.preventDefault(); setSel((s) => Math.min(s + 1, items.length - 1)); }
               else if (e.key === 'ArrowUp') { e.preventDefault(); setSel((s) => Math.max(s - 1, 0)); }
@@ -81,15 +81,15 @@ export function QuickInput({ mode, cmds, onClose }: { mode: QuickMode; cmds: Com
             }} />
         </div>
         <div className="max-h-[50vh] overflow-y-auto py-1">
-          {items.length === 0 && <div className="px-3 py-2 text-[12px] text-[--color-fg-dim]">No matches</div>}
+          {items.length === 0 && <div className="px-3 py-2 text-[12px] text-[var(--color-fg-dim)]">No matches</div>}
           {items.map((item, i) => (
             <div key={item.id}
               className={`flex cursor-pointer items-center gap-2 px-3 py-1.5 text-[12.5px]
-                ${i === sel ? 'bg-[--color-selection] text-[--color-fg-bright]' : 'text-[--color-fg] hover:bg-[--color-bg-elev]'}`}
+                ${i === sel ? 'bg-[var(--color-selection)] text-[var(--color-fg-bright)]' : 'text-[var(--color-fg)] hover:bg-[var(--color-bg-elev)]'}`}
               onMouseEnter={() => setSel(i)} onClick={() => choose(i)}>
               {item.icon && <span style={{ color: item.icon.color }}><Icon path={item.icon.path} size={15} /></span>}
               <span className="truncate">{item.label}</span>
-              {item.sub && <span className="ml-auto truncate pl-3 text-[11px] text-[--color-fg-dim]">{item.sub}</span>}
+              {item.sub && <span className="ml-auto truncate pl-3 text-[11px] text-[var(--color-fg-dim)]">{item.sub}</span>}
             </div>
           ))}
         </div>

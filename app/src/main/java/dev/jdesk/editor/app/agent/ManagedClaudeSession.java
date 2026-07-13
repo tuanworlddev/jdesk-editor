@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * process's stdout; the session tracks tool calls and completion. This is the embedded lifecycle —
  * the editor owns the process — as distinct from an external client connecting to MCP.
  */
-public final class ManagedClaudeSession {
+public final class ManagedClaudeSession implements ManagedAgentSession {
 
     private static final ObjectMapper JSON = new ObjectMapper();
 
@@ -42,10 +42,8 @@ public final class ManagedClaudeSession {
         this.claudeExecutable = claudeExecutable == null ? "claude" : claudeExecutable;
     }
 
-    public record Status(boolean done, boolean success, List<String> toolCalls, String result,
-            String claudeSessionId) {}
-
     /** Spawns the agent with the given prompt, restricted to the editor's MCP tools. */
+    @Override
     public void start(String prompt) {
         List<String> argv = List.of(
                 claudeExecutable, "-p", prompt,
@@ -117,15 +115,18 @@ public final class ManagedClaudeSession {
         }
     }
 
+    @Override
     public Status status() {
         return new Status(done.get(), success.get(), List.copyOf(toolCalls),
                 resultText.get(), claudeSessionId.get());
     }
 
+    @Override
     public String sessionId() {
         return sessionId;
     }
 
+    @Override
     public void interrupt() {
         Process p = process;
         if (p != null) {

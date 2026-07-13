@@ -171,8 +171,8 @@ const modeResults: Record<string, string> = {};
 let agentSessionId: string | null = null;
 let agentStatus: unknown = null;
 (window as unknown as { __agentDriver: unknown }).__agentDriver = {
-  start(prompt: string) {
-    void commands.agent.startClaude({ prompt }).then((s) => {
+  start(prompt: string, provider: 'claude' | 'codex' = 'claude') {
+    void commands.agent.start({ prompt, provider }).then((s) => {
       agentSessionId = s.sessionId;
       useStore.getState().setStatus(`Agent ${s.sessionId} started`);
     });

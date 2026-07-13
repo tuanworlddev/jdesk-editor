@@ -63,10 +63,11 @@ public final class Main {
 
         WorkspaceFacade workspace = new WorkspaceFacade(current::get, onOpen);
         DocumentFacade documents = new DocumentFacade(current::get);
-        // The embedded agent uses the editor's own MCP config, written next to the MCP server.
-        AtomicReference<Path> mcpConfigRef = new AtomicReference<>();
+        // The embedded agent uses the editor's own MCP files (mcp-config.json for Claude,
+        // discovery.json for Codex), written next to the MCP server.
+        AtomicReference<Path> mcpDirRef = new AtomicReference<>();
         dev.jdesk.editor.app.ipc.AgentFacade agents =
-                new dev.jdesk.editor.app.ipc.AgentFacade(mcpConfigRef::get);
+                new dev.jdesk.editor.app.ipc.AgentFacade(mcpDirRef::get);
         // TerminalManager is created at onReady (needs the ApplicationHandle); the facade reads it lazily.
         AtomicReference<TerminalManager> terminalsRef = new AtomicReference<>();
         dev.jdesk.editor.app.ipc.TerminalFacade terminalFacade =
@@ -164,7 +165,7 @@ public final class Main {
                 McpServer server = new McpServer(bridge, mcpDir.resolve("discovery.json"), gate);
                 server.start();
                 writeMcpConfig(mcpDir, server);
-                mcpConfigRef.set(mcpDir.resolve("mcp-config.json"));
+                mcpDirRef.set(mcpDir);
                 mcpRef.set(server);
                 System.out.println("MCP-READY " + server.url());
             }

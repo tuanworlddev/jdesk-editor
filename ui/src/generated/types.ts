@@ -175,6 +175,7 @@ export interface SaveResult {
 
 export interface StartRequest {
   prompt: string;
+  provider: string;
 }
 
 export interface Status {

@@ -7,8 +7,8 @@ export const commands = {
     interrupt(request: StatusRequest): Promise<AgentStatus> {
       return invoke("agent.interrupt", request) as Promise<AgentStatus>;
     },
-    startClaude(request: StartRequest): Promise<AgentSession> {
-      return invoke("agent.startClaude", request) as Promise<AgentSession>;
+    start(request: StartRequest): Promise<AgentSession> {
+      return invoke("agent.start", request) as Promise<AgentSession>;
     },
     status(request: StatusRequest): Promise<AgentStatus> {
       return invoke("agent.status", request) as Promise<AgentStatus>;

@@ -64,10 +64,10 @@ export function EditorPane() {
       <div className="relative min-h-0 flex-1">
       {isDiff && activeUri && <DiffEditor key={activeUri} diffUri={activeUri} />}
       {!activeUri && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-[--color-fg-dim]">
-          <h1 className="m-0 text-[26px] font-semibold tracking-tight text-[--color-fg-bright]">JDesk Editor</h1>
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-[var(--color-fg-dim)]">
+          <h1 className="m-0 text-[26px] font-semibold tracking-tight text-[var(--color-fg-bright)]">JDesk Editor</h1>
           <p>Select a file in the Explorer to start editing.</p>
-          <p className="text-[12px] text-[--color-accent-dim]">
+          <p className="text-[12px] text-[var(--color-accent-dim)]">
             Agent-native · Monaco on the native WebView · ⌘S to save
           </p>
         </div>

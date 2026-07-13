@@ -34,14 +34,14 @@ export function SearchPanel() {
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="flex items-center gap-2 px-3 py-2.5 text-[11px] font-semibold uppercase
-        tracking-wider text-[--color-fg-dim]">
+        tracking-wider text-[var(--color-fg-dim)]">
         <Icon path={mdiMagnify} size={15} /> Search
       </div>
       <div className="px-2">
-        <div className="flex items-center rounded-md border border-[--color-border] bg-[--color-bg]
-          focus-within:border-[--color-accent-dim]">
+        <div className="flex items-center rounded-md border border-[var(--color-border)] bg-[var(--color-bg)]
+          focus-within:border-[var(--color-accent-dim)]">
           <input
-            className="min-w-0 flex-1 bg-transparent px-2.5 py-1.5 text-[12.5px] text-[--color-fg] outline-none"
+            className="min-w-0 flex-1 bg-transparent px-2.5 py-1.5 text-[12.5px] text-[var(--color-fg)] outline-none"
             placeholder="Search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -49,16 +49,16 @@ export function SearchPanel() {
           />
           <button title="Match Case" onClick={() => setCaseSensitive((v) => !v)}
             className={`m-0.5 flex h-6 w-6 items-center justify-center rounded
-              ${caseSensitive ? 'bg-[--color-accent-dim] text-[--color-fg-bright]' : 'text-[--color-fg-dim] hover:bg-[--color-bg-elev]'}`}>
+              ${caseSensitive ? 'bg-[var(--color-accent-dim)] text-[var(--color-fg-bright)]' : 'text-[var(--color-fg-dim)] hover:bg-[var(--color-bg-elev)]'}`}>
             <Icon path={mdiFormatLetterCase} size={16} />
           </button>
           <button title="Use Regular Expression" onClick={() => setRegex((v) => !v)}
             className={`m-0.5 flex h-6 w-6 items-center justify-center rounded
-              ${regex ? 'bg-[--color-accent-dim] text-[--color-fg-bright]' : 'text-[--color-fg-dim] hover:bg-[--color-bg-elev]'}`}>
+              ${regex ? 'bg-[var(--color-accent-dim)] text-[var(--color-fg-bright)]' : 'text-[var(--color-fg-dim)] hover:bg-[var(--color-bg-elev)]'}`}>
             <Icon path={mdiRegex} size={16} />
           </button>
         </div>
-        <div className="flex items-center gap-2 px-1 py-1.5 text-[11px] text-[--color-fg-dim]">
+        <div className="flex items-center gap-2 px-1 py-1.5 text-[11px] text-[var(--color-fg-dim)]">
           {busy ? <><Icon path={mdiLoading} size={13} className="animate-spin" /> searching…</>
             : total > 0 ? <span>{total} results in {files.length} files</span>
             : query ? <span>No results</span> : <span>Enter a query and press Enter</span>}
@@ -72,19 +72,19 @@ export function SearchPanel() {
           const icon = fileIcon(name);
           return (
             <div key={f.relPath}>
-              <div className="flex h-6 cursor-pointer items-center gap-1 px-2 hover:bg-[--color-bg-elev]"
+              <div className="flex h-6 cursor-pointer items-center gap-1 px-2 hover:bg-[var(--color-bg-elev)]"
                 onClick={() => setCollapsed((c) => { const n = new Set(c); n.has(f.relPath) ? n.delete(f.relPath) : n.add(f.relPath); return n; })}>
-                <Icon path={isCollapsed ? mdiChevronRight : mdiChevronDown} size={14} className="text-[--color-fg-dim]" />
+                <Icon path={isCollapsed ? mdiChevronRight : mdiChevronDown} size={14} className="text-[var(--color-fg-dim)]" />
                 <span style={{ color: icon.color }}><Icon path={icon.path} size={14} /></span>
-                <span className="truncate text-[12.5px] text-[--color-fg]">{name}</span>
-                <span className="ml-auto rounded bg-[--color-selection] px-1.5 text-[10px] text-[--color-fg-dim]">{f.matches.length}</span>
+                <span className="truncate text-[12.5px] text-[var(--color-fg)]">{name}</span>
+                <span className="ml-auto rounded bg-[var(--color-selection)] px-1.5 text-[10px] text-[var(--color-fg-dim)]">{f.matches.length}</span>
               </div>
               {!isCollapsed && f.matches.map((m, i) => (
                 <div key={i}
                   className="flex h-[22px] cursor-pointer items-center gap-2 pl-8 pr-2 text-[12px]
-                    text-[--color-fg-dim] hover:bg-[--color-selection] hover:text-[--color-fg]"
+                    text-[var(--color-fg-dim)] hover:bg-[var(--color-selection)] hover:text-[var(--color-fg)]"
                   onClick={() => openFileAt(f.relPath, m.line, m.column)}>
-                  <span className="w-8 shrink-0 text-right text-[--color-accent]">{m.line}</span>
+                  <span className="w-8 shrink-0 text-right text-[var(--color-accent)]">{m.line}</span>
                   <span className="truncate font-mono">{m.preview}</span>
                 </div>
               ))}

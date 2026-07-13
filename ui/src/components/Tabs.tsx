@@ -9,9 +9,9 @@ export function Tabs() {
   const setActive = useStore((s) => s.setActive);
   const closeTab = useStore((s) => s.closeTab);
 
-  if (tabs.length === 0) return <div className="h-9 bg-[--color-bg]" />;
+  if (tabs.length === 0) return <div className="h-9 bg-[var(--color-bg)]" />;
   return (
-    <div className="flex h-9 overflow-x-auto border-b border-[--color-border] bg-[--color-bg-elev]"
+    <div className="flex h-9 overflow-x-auto border-b border-[var(--color-border)] bg-[var(--color-bg-elev)]"
       role="tablist">
       {tabs.map((tab) => {
         const active = tab.uri === activeUri;
@@ -20,9 +20,9 @@ export function Tabs() {
         return (
           <div key={tab.uri}
             className={`group flex h-9 max-w-[220px] cursor-pointer items-center gap-2 border-r
-              border-[--color-border] px-3 text-[12.5px]
-              ${active ? 'bg-[--color-bg] text-[--color-fg-bright] border-t-2 border-t-[--color-accent]'
-                : 'text-[--color-fg-dim] hover:text-[--color-fg]'}`}
+              border-[var(--color-border)] px-3 text-[12.5px]
+              ${active ? 'bg-[var(--color-bg)] text-[var(--color-fg-bright)] border-t-2 border-t-[var(--color-accent)]'
+                : 'text-[var(--color-fg-dim)] hover:text-[var(--color-fg)]'}`}
             data-semantic-id={`tab:${tab.relPath}`}
             role="tab" aria-selected={active}
             onClick={() => setActive(tab.uri)}>

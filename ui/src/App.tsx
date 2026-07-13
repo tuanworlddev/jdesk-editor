@@ -95,7 +95,7 @@ export function App() {
       gridTemplateRows: '1fr 24px',
       gridTemplateAreas: `'activity sidebar editor agent' 'status status status status'`,
     }}>
-      <nav className="flex flex-col items-center gap-1 border-r border-[--color-border] bg-[--color-bg-activity] pt-2"
+      <nav className="flex flex-col items-center gap-1 bg-[var(--color-bg-activity)] pt-2"
         style={{ gridArea: 'activity' }}>
         {activityItems.map((item) => {
           const active = (item.id === 'agent' && agentOpen) || (item.id === 'terminal' && bottomOpen)
@@ -108,24 +108,24 @@ export function App() {
                 else setActivity(item.id);
               }}
               className={`relative flex h-11 w-11 items-center justify-center rounded-[10px] transition-colors
-                ${active ? 'text-[--color-accent]' : 'text-[--color-fg-dim] hover:bg-[--color-bg-elev] hover:text-[--color-fg]'}`}>
-              {active && <span className="absolute left-0 h-7 w-[2px] rounded-r bg-[--color-accent]" />}
+                ${active ? 'text-[var(--color-accent)]' : 'text-[var(--color-fg-dim)] hover:bg-[var(--color-bg-elev)] hover:text-[var(--color-fg)]'}`}>
+              {active && <span className="absolute left-0 h-7 w-[2px] rounded-r bg-[var(--color-accent)]" />}
               <Icon path={item.icon} size={22} />
             </button>
           );
         })}
       </nav>
 
-      <aside className="flex flex-col overflow-hidden border-r border-[--color-border] bg-[--color-bg-sidebar]"
+      <aside className="flex flex-col overflow-hidden bg-[var(--color-bg-sidebar)]"
         style={{ gridArea: 'sidebar' }}>
         {activity === 'explorer' && (
           <>
             <div className="flex items-center justify-between px-3 pt-2">
-              <span className="truncate text-[11px] font-semibold uppercase tracking-wider text-[--color-fg-dim]">
+              <span className="truncate text-[11px] font-semibold uppercase tracking-wider text-[var(--color-fg-dim)]">
                 {workspace ? 'Explorer' : 'No Folder'}
               </span>
               <button title="Open Folder" onClick={() => fire('file.openFolder')}
-                className="text-[--color-fg-dim] hover:text-[--color-fg]">
+                className="text-[var(--color-fg-dim)] hover:text-[var(--color-fg)]">
                 <Icon path={mdiFolderOpenOutline} size={16} />
               </button>
             </div>
@@ -136,17 +136,17 @@ export function App() {
         {activity === 'git' && <SourceControlPanel />}
       </aside>
 
-      <main className="flex min-w-0 flex-col bg-[--color-bg]" style={{ gridArea: 'editor' }}>
+      <main className="flex min-w-0 flex-col bg-[var(--color-bg)]" style={{ gridArea: 'editor' }}>
         <Tabs />
         <div className="relative flex min-h-0 flex-1 flex-col">
           <div className="min-h-0 flex-1"><EditorPane /></div>
           {bottomOpen && (
-            <div className="flex h-[240px] flex-col border-t border-[--color-border] bg-[--color-panel]">
-              <div className="flex items-center gap-1 border-b border-[--color-border] px-2">
+            <div className="flex h-[240px] flex-col border-t border-[var(--color-border)] bg-[var(--color-panel)]">
+              <div className="flex items-center gap-1 border-b border-[var(--color-border)] px-2">
                 <BottomTabBtn label="Terminal" icon={mdiConsoleLine} active={bottomTab === 'terminal'} onClick={() => setBottomTab('terminal')} />
                 <BottomTabBtn label="Problems" icon={mdiAlertCircleOutline} active={bottomTab === 'problems'} onClick={() => setBottomTab('problems')} />
                 <button title="Close panel" onClick={() => setBottomOpen(false)}
-                  className="ml-auto flex h-6 w-6 items-center justify-center rounded text-[--color-fg-dim] hover:bg-[--color-bg-elev]">
+                  className="ml-auto flex h-6 w-6 items-center justify-center rounded text-[var(--color-fg-dim)] hover:bg-[var(--color-bg-elev)]">
                   <Icon path={mdiClose} size={15} />
                 </button>
               </div>
@@ -154,7 +154,7 @@ export function App() {
                 <TerminalPanel visible={bottomOpen && bottomTab === 'terminal'} />
               </div>
               {bottomTab === 'problems' && (
-                <div className="flex min-h-0 flex-1 items-center justify-center text-[12px] text-[--color-fg-dim]">
+                <div className="flex min-h-0 flex-1 items-center justify-center text-[12px] text-[var(--color-fg-dim)]">
                   No problems detected in the workspace.
                 </div>
               )}
@@ -164,7 +164,7 @@ export function App() {
       </main>
 
       {agentOpen && (
-        <aside className="overflow-hidden border-l border-[--color-border]" style={{ gridArea: 'agent' }}>
+        <aside className="overflow-hidden" style={{ gridArea: 'agent' }}>
           <AgentPanel />
         </aside>
       )}
@@ -181,7 +181,7 @@ function BottomTabBtn({ label, icon, active, onClick }:
   return (
     <button onClick={onClick}
       className={`flex items-center gap-1.5 border-b-2 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider
-        ${active ? 'border-[--color-accent] text-[--color-fg]' : 'border-transparent text-[--color-fg-dim] hover:text-[--color-fg]'}`}>
+        ${active ? 'border-[var(--color-accent)] text-[var(--color-fg)]' : 'border-transparent text-[var(--color-fg-dim)] hover:text-[var(--color-fg)]'}`}>
       <Icon path={icon} size={14} /> {label}
     </button>
   );

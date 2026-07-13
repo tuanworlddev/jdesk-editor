@@ -60,7 +60,7 @@ export function Explorer() {
 
   return (
     <div className="flex h-full min-h-0 flex-col" onContextMenu={(e) => e.preventDefault()}>
-      <div className="flex items-center px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-[--color-fg-dim]">
+      <div className="flex items-center px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-[var(--color-fg-dim)]">
         <span className="truncate">{workspace ? workspace.rootName : 'Explorer'}</span>
         <div className="ml-auto flex items-center gap-0.5">
           <ToolBtn title="New File" icon={mdiFilePlusOutline} onClick={() => setEditing({ type: 'new', dir: '', kind: 'file' })} />
@@ -71,8 +71,8 @@ export function Explorer() {
       </div>
 
       {!workspace ? (
-        <div className="px-4 py-3 text-[12px] leading-relaxed text-[--color-fg-dim]">
-          No folder opened. <span className="text-[--color-accent]">File ▸ Open Folder</span> or ⌘O.
+        <div className="px-4 py-3 text-[12px] leading-relaxed text-[var(--color-fg-dim)]">
+          No folder opened. <span className="text-[var(--color-accent)]">File ▸ Open Folder</span> or ⌘O.
         </div>
       ) : (
         <div className="min-h-0 flex-1 overflow-y-auto pb-2" role="tree" aria-label="Explorer">
@@ -94,7 +94,7 @@ export function Explorer() {
 function ToolBtn({ title, icon, onClick }: { title: string; icon: string; onClick: () => void }) {
   return (
     <button title={title} onClick={onClick}
-      className="flex h-6 w-6 items-center justify-center rounded text-[--color-fg-dim] hover:bg-[--color-bg-elev] hover:text-[--color-fg]">
+      className="flex h-6 w-6 items-center justify-center rounded text-[var(--color-fg-dim)] hover:bg-[var(--color-bg-elev)] hover:text-[var(--color-fg)]">
       <Icon path={icon} size={15} />
     </button>
   );
@@ -129,14 +129,14 @@ function TreeNode({ entry, depth, editing, setEditing, onMenu, onCommit }: {
     <>
       <div
         className={`group flex h-[24px] cursor-pointer select-none items-center gap-1 pr-2 text-[13px]
-          ${isActive ? 'bg-[--color-selection] text-[--color-fg-bright]' : 'hover:bg-[--color-bg-elev]'}`}
+          ${isActive ? 'bg-[var(--color-selection)] text-[var(--color-fg-bright)]' : 'hover:bg-[var(--color-bg-elev)]'}`}
         data-semantic-id={semanticId} role="treeitem"
         aria-expanded={entry.directory ? expanded : undefined} tabIndex={0}
         style={{ paddingLeft: 6 + depth * 14 }}
         onClick={onActivate}
         onContextMenu={(e) => onMenu(entry, e)}
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onActivate(); } }}>
-        <span className="flex w-3 justify-center text-[--color-fg-dim]">
+        <span className="flex w-3 justify-center text-[var(--color-fg-dim)]">
           {entry.directory && <Icon path={expanded ? mdiChevronDown : mdiChevronRight} size={14} />}
         </span>
         <span className="shrink-0" style={{ color: icon.color }}><Icon path={icon.path} size={16} /></span>
@@ -161,9 +161,9 @@ function InlineInput({ kind, depth, initial, onCommit, onCancel }: {
   return (
     <div className="flex h-[24px] items-center gap-1 pr-2" style={{ paddingLeft: 6 + depth * 14 }}>
       <span className="w-3" />
-      <Icon path={kind === 'folder' ? mdiFolder : mdiFileDocumentOutline} size={16} className="shrink-0 text-[--color-fg-dim]" />
+      <Icon path={kind === 'folder' ? mdiFolder : mdiFileDocumentOutline} size={16} className="shrink-0 text-[var(--color-fg-dim)]" />
       <input autoFocus value={value} onChange={(e) => setValue(e.target.value)}
-        className="min-w-0 flex-1 rounded border border-[--color-accent-dim] bg-[--color-bg] px-1 text-[13px] text-[--color-fg] outline-none"
+        className="min-w-0 flex-1 rounded border border-[var(--color-accent-dim)] bg-[var(--color-bg)] px-1 text-[13px] text-[var(--color-fg)] outline-none"
         onKeyDown={(e) => { if (e.key === 'Enter') onCommit(value); else if (e.key === 'Escape') onCancel(); }}
         onBlur={() => (value.trim() ? onCommit(value) : onCancel())} />
     </div>
