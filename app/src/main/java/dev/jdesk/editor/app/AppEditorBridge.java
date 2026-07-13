@@ -50,6 +50,8 @@ public final class AppEditorBridge implements EditorBridge {
     @Override public List<EntryInfo> list(String relPath) { return delegate().list(relPath); }
     @Override public List<EntryInfo> search(String q, int max) { return delegate().search(q, max); }
     @Override public OperationResult createFile(String relPath) { return delegate().createFile(relPath); }
+    @Override public OperationResult renameFile(String from, String to) { return delegate().renameFile(from, to); }
+    @Override public OperationResult deleteFile(String relPath) { return delegate().deleteFile(relPath); }
     @Override public DocumentInfo open(String relPath) { return delegate().open(relPath); }
     @Override public OperationResult applyWorkspaceEdit(String relPath,
             List<dev.jdesk.editor.api.wire.TextEditDto> edits, String agentId) {

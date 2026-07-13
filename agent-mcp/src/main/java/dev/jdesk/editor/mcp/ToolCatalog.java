@@ -63,6 +63,18 @@ public final class ToolCatalog {
                 schema(prop("relPath", "string", "Workspace-relative path of the new file")), false,
                 (bridge, args) -> envelope(bridge.createFile(required(args, "relPath"))));
 
+        register("file_rename", "file.rename",
+                "Rename or move a file within the workspace.",
+                schema(prop("fromRelPath", "string", "Existing workspace-relative path"),
+                        prop("toRelPath", "string", "New workspace-relative path")), false,
+                (bridge, args) -> envelope(bridge.renameFile(
+                        required(args, "fromRelPath"), required(args, "toRelPath"))));
+
+        registerDestructive("file_delete", "file.delete",
+                "Delete a file from the workspace (requires approval).",
+                schema(prop("relPath", "string", "Workspace-relative path to delete")),
+                (bridge, args) -> envelope(bridge.deleteFile(required(args, "relPath"))));
+
         register("editor_open", "editor.open",
                 "Open a document and return its uri, version, content hash, and content.",
                 schema(prop("relPath", "string", "Workspace-relative path")), false,
@@ -181,6 +193,11 @@ public final class ToolCatalog {
         tools.add(tool);
         byName.put(name, tool);
         byName.put(dottedAlias, tool);
+    }
+
+    private void registerDestructive(String name, String dottedAlias, String description,
+            ObjectNode schema, Handler handler) {
+        register(name, dottedAlias, description, schema, true, handler);
     }
 
     private ArrayNode entries(List<EditorBridge.EntryInfo> list) {

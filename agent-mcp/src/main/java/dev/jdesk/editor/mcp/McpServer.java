@@ -37,17 +37,32 @@ public final class McpServer implements AutoCloseable {
     private static final ObjectMapper JSON = new ObjectMapper();
     private static final SecureRandom RANDOM = new SecureRandom();
 
+    /**
+     * Decides whether a destructive tool call is allowed. The app wires this to a native approval
+     * prompt; the default denies (approval required) so a destructive op never runs unattended.
+     */
+    @FunctionalInterface
+    public interface ApprovalGate {
+        boolean approve(String toolName, JsonNode arguments);
+    }
+
     private final EditorBridge bridge;
     private final ToolCatalog catalog = new ToolCatalog();
     private final String token;
     private final Path discoveryFile;
+    private final ApprovalGate approvalGate;
 
     private HttpServer http;
     private int port;
 
     public McpServer(EditorBridge bridge, Path discoveryFile) {
+        this(bridge, discoveryFile, (tool, args) -> false);
+    }
+
+    public McpServer(EditorBridge bridge, Path discoveryFile, ApprovalGate approvalGate) {
         this.bridge = bridge;
         this.discoveryFile = discoveryFile;
+        this.approvalGate = approvalGate;
         byte[] raw = new byte[32];
         RANDOM.nextBytes(raw);
         this.token = HexFormat.of().formatHex(raw);
@@ -187,6 +202,11 @@ public final class McpServer implements AutoCloseable {
         ObjectNode result = JSON.createObjectNode();
         try {
             ToolCatalog.Tool tool = catalog.resolve(name);
+            if (tool.destructive() && !approvalGate.approve(tool.name(), arguments)) {
+                fillError(result, EditorErrorCode.APPROVAL_REQUIRED,
+                        "Destructive tool '" + tool.name() + "' requires approval");
+                return jsonRpcResult(id, result);
+            }
             JsonNode structured = tool.handler().call(bridge, arguments);
             ArrayNode content = result.putArray("content");
             ObjectNode text = content.addObject();

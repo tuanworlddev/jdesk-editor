@@ -35,6 +35,10 @@ public interface EditorBridge {
 
     OperationResult createFile(String relPath);
 
+    OperationResult renameFile(String fromRelPath, String toRelPath);
+
+    OperationResult deleteFile(String relPath);
+
     DocumentInfo open(String relPath);
 
     OperationResult applyWorkspaceEdit(String relPath, List<TextEditDto> edits, String agentId);

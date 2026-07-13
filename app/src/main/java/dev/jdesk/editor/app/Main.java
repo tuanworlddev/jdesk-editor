@@ -117,7 +117,25 @@ public final class Main {
                         terminals);
                 Path mcpDir = Path.of(System.getProperty("jdesk.editor.mcp.dir",
                         System.getProperty("java.io.tmpdir") + "/jdesk-editor-mcp"));
-                McpServer server = new McpServer(bridge, mcpDir.resolve("discovery.json"));
+                // Destructive tools prompt the user with a native dialog before running; the test
+                // lanes set -Djdesk.editor.autoApprove=true to exercise the approved path.
+                McpServer.ApprovalGate gate = (toolName, arguments) -> {
+                    if (Boolean.getBoolean("jdesk.editor.autoApprove")) {
+                        return true;
+                    }
+                    try {
+                        var result = application.showMessageDialog(new dev.jdesk.api.MessageDialog(
+                                "Approve agent action",
+                                "Allow the agent to run '" + toolName + "'?",
+                                dev.jdesk.api.MessageDialog.Kind.WARNING,
+                                java.util.List.of("Approve", "Deny")))
+                                .toCompletableFuture().get(120, java.util.concurrent.TimeUnit.SECONDS);
+                        return result.buttonIndex() == 0;
+                    } catch (Exception e) {
+                        return false;
+                    }
+                };
+                McpServer server = new McpServer(bridge, mcpDir.resolve("discovery.json"), gate);
                 server.start();
                 writeMcpConfig(mcpDir, server);
                 mcpConfigRef.set(mcpDir.resolve("mcp-config.json"));

@@ -131,6 +131,55 @@ class McpServerIT {
     }
 
     @Test
+    void destructiveFileDeleteRequiresApprovalByDefault() throws Exception {
+        // Default server denies destructive ops.
+        ObjectNode args = json.createObjectNode();
+        args.put("relPath", "existing.txt");
+        JsonNode result = callTool("file_delete", args);
+        assertThat(result.path("isError").asBoolean()).isTrue();
+        assertThat(result.path("structuredContent").path("code").asText()).isEqualTo("APPROVAL_REQUIRED");
+        assertThat(Files.exists(workspace.resolve("existing.txt"))).isTrue(); // not deleted
+    }
+
+    @Test
+    void approvedFileDeleteSucceeds() throws Exception {
+        // A server whose approval gate says yes performs the deletion.
+        PathService paths = new PathService(workspace);
+        DocumentStore documents = new DocumentStore(paths, new AtomicSaver(), System::currentTimeMillis);
+        CoreEditorBridge bridge = new CoreEditorBridge(paths, new FileTree(paths), documents, uri -> {});
+        try (McpServer approving = new McpServer(bridge,
+                workspace.resolve("mcp2/discovery.json"), (tool, a) -> true)) {
+            approving.start();
+            ObjectNode args = json.createObjectNode();
+            args.put("relPath", "existing.txt");
+            ObjectNode params = json.createObjectNode();
+            params.put("name", "file_delete");
+            params.set("arguments", args);
+            HttpResponse<String> response = http.send(
+                    HttpRequest.newBuilder(URI.create(approving.url()))
+                            .header("Authorization", "Bearer " + approving.token())
+                            .header("Content-Type", "application/json")
+                            .POST(HttpRequest.BodyPublishers.ofString(rpc("9", "tools/call", params)))
+                            .build(),
+                    HttpResponse.BodyHandlers.ofString());
+            JsonNode result = json.readTree(response.body()).path("result");
+            assertThat(result.path("isError").asBoolean()).isFalse();
+            assertThat(Files.exists(workspace.resolve("existing.txt"))).isFalse(); // deleted
+        }
+    }
+
+    @Test
+    void renameMovesTheFile() throws Exception {
+        ObjectNode args = json.createObjectNode();
+        args.put("fromRelPath", "existing.txt");
+        args.put("toRelPath", "renamed/moved.txt");
+        JsonNode result = callTool("file_rename", args);
+        assertThat(result.path("isError").asBoolean()).isFalse();
+        assertThat(Files.exists(workspace.resolve("existing.txt"))).isFalse();
+        assertThat(Files.readString(workspace.resolve("renamed/moved.txt"))).isEqualTo("hello\n");
+    }
+
+    @Test
     void unknownToolReturnsError() throws Exception {
         JsonNode result = callTool("editor_nonexistent", json.createObjectNode());
         assertThat(result.path("isError").asBoolean()).isTrue();

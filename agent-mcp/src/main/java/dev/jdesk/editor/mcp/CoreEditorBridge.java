@@ -79,6 +79,37 @@ public final class CoreEditorBridge implements EditorBridge {
     }
 
     @Override
+    public OperationResult renameFile(String fromRelPath, String toRelPath) {
+        var from = paths.resolveExisting(fromRelPath);
+        paths.ensureParentDirectories(toRelPath);
+        var to = paths.resolveForCreate(toRelPath);
+        try {
+            java.nio.file.Files.move(from.absolute(), to.absolute());
+        } catch (java.io.IOException e) {
+            throw new dev.jdesk.editor.api.EditorException(
+                    dev.jdesk.editor.api.EditorErrorCode.INTERNAL_ERROR,
+                    "Cannot rename " + fromRelPath, e);
+        }
+        documents.close(from.uri());
+        return new OperationResult(newOperationId(), "COMMITTED", Map.of(),
+                "Renamed " + fromRelPath + " -> " + toRelPath);
+    }
+
+    @Override
+    public OperationResult deleteFile(String relPath) {
+        var path = paths.resolveExisting(relPath);
+        try {
+            java.nio.file.Files.delete(path.absolute());
+        } catch (java.io.IOException e) {
+            throw new dev.jdesk.editor.api.EditorException(
+                    dev.jdesk.editor.api.EditorErrorCode.INTERNAL_ERROR,
+                    "Cannot delete " + relPath, e);
+        }
+        documents.close(path.uri());
+        return new OperationResult(newOperationId(), "COMMITTED", Map.of(), "Deleted " + relPath);
+    }
+
+    @Override
     public DocumentInfo open(String relPath) {
         EditorDocument doc = documents.open(relPath);
         return new DocumentInfo(doc.uri(), doc.path().relative(), doc.version(),
