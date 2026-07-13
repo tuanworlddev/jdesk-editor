@@ -1,0 +1,30 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T113756Z-8edb",
+  "suite" : "live-agent-editor",
+  "tests" : [ {
+    "id" : "LIVE-AGENT-01-mcp-tools",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "claude-stream.jsonl", "live-editor-text.txt", "screenshots/live-editor.png" ],
+    "detail" : "Claude called 2 editor MCP tool(s): ['mcp__jdesk_editor__editor_apply_workspace_edit', 'mcp__jdesk_editor__editor_save']"
+  }, {
+    "id" : "LIVE-AGENT-02-live-monaco",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "claude-stream.jsonl", "live-editor-text.txt", "screenshots/live-editor.png" ],
+    "detail" : "running editor Monaco content contains the agent's edit: True"
+  }, {
+    "id" : "LIVE-AGENT-03-disk",
+    "outcome" : "PASS",
+    "durationMs" : 0,
+    "evidence" : [ "gate-results.json", "claude-stream.jsonl", "live-editor-text.txt", "screenshots/live-editor.png" ],
+    "detail" : "disk src/notes.txt contains the agent's edit: True"
+  } ],
+  "summary" : {
+    "pass" : 3,
+    "fail" : 0,
+    "blocked" : 0
+  },
+  "overall" : "PASS"
+}

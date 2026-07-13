@@ -3,11 +3,34 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import { useStore } from './store';
-import { onDirtyChange, getModel, flushNow, javaVersion } from './models';
+import { onDirtyChange, getModel, flushNow, javaVersion, hasModel, applyAuthoritativeContent } from './models';
+import { on } from './ipc';
 import './styles.css';
 
 // Bridge model dirty-state changes into the tab store (kept out of React's render path).
 onDirtyChange((uri, dirty) => useStore.getState().markTabDirty(uri, dirty));
+
+// Agent edits arriving via MCP push new content to the live model, so an agent's change appears
+// in the running editor. If the changed document is not open yet, open it so the agent's work is
+// visible.
+on('editor.docChanged', (payload) => {
+  const event = payload as { uri: string; content: string; version: number };
+  if (hasModel(event.uri)) {
+    applyAuthoritativeContent(event.uri, event.content, event.version);
+    useStore.getState().setActive(event.uri);
+    return;
+  }
+  // Not open yet (agent created a new file): refresh the Explorer, then open it so the edit shows.
+  const store = useStore.getState();
+  const rootPath = store.workspace?.rootPath;
+  const filePath = decodeURIComponent(event.uri.replace(/^file:\/\//, ''));
+  const rel = rootPath && filePath.startsWith(rootPath)
+    ? filePath.slice(rootPath.length).replace(/^\//, '')
+    : null;
+  void store.refreshWorkspace().then(() => {
+    if (rel) void store.openFile(rel).catch(() => {});
+  });
+});
 
 // Restore the workspace the Java side may have opened at startup (E2E passes --workspace).
 useStore.getState().refreshWorkspace().catch(() => {});

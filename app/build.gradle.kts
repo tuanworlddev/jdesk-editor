@@ -14,6 +14,7 @@ dependencies {
     implementation("dev.jdesk:jdesk-runtime:$jdeskVersion")
     implementation(project(":editor-api"))
     implementation(project(":editor-core"))
+    implementation(project(":agent-mcp"))
     compileOnly(libs.jackson.databind)
     // Compile-time @DesktopCommand registration + TypeScript binding generation (we are the
     // first real consumer of the typed-bindings path — see docs/JDESK_AUDIT.md gap 6).
@@ -62,6 +63,8 @@ tasks.named<JavaExec>("run") {
         systemProperty("jdesk.automation.dir",
             layout.buildDirectory.dir("automation").get().asFile.absolutePath)
         systemProperty("jdesk.console.forward", "true")
+        systemProperty("jdesk.editor.mcp.dir",
+            layout.buildDirectory.dir("mcp").get().asFile.absolutePath)
     }
     providers.gradleProperty("editorArgs").orNull?.let { args(it.split(" ")) }
 }

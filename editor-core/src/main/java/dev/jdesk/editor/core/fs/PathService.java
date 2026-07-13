@@ -99,6 +99,33 @@ public final class PathService {
         return toContainedWorkspacePath(realTarget, relative);
     }
 
+    /**
+     * Creates any missing ancestor directories of a workspace-relative path, top-down, validating
+     * containment at each step (so an agent can create {@code src/new/File.txt} in one call without
+     * a symlink or traversal escaping the workspace).
+     */
+    public void ensureParentDirectories(String relativePath) {
+        String normalized = relativePath.replace('\\', '/');
+        String[] parts = normalized.split("/");
+        StringBuilder prefix = new StringBuilder();
+        for (int i = 0; i < parts.length - 1; i++) {
+            if (parts[i].isEmpty()) {
+                continue;
+            }
+            if (prefix.length() > 0) {
+                prefix.append('/');
+            }
+            prefix.append(parts[i]);
+            WorkspacePath dir = resolveForCreate(prefix.toString());
+            try {
+                Files.createDirectories(dir.absolute());
+            } catch (IOException e) {
+                throw new EditorException(EditorErrorCode.INTERNAL_ERROR,
+                        "Cannot create directory " + dir.relative(), e);
+            }
+        }
+    }
+
     /** True if the given already-real path lies inside the workspace root. */
     public boolean isContained(Path realPath) {
         Path normalized = realPath.normalize();
