@@ -7,6 +7,8 @@ tasks.register("banned-version-markers") {
     val buildFiles = layout.projectDirectory.asFileTree.matching {
         include("**/build.gradle.kts", "**/settings.gradle.kts", "gradle/libs.versions.toml", "**/package.json")
         exclude("**/build/**", "**/node_modules/**", "**/.gradle/**")
+        // This root file defines the lint's own patterns; scanning it self-matches.
+        exclude("build.gradle.kts")
     }
     inputs.files(buildFiles)
     doLast {
