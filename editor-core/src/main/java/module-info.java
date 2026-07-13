@@ -8,4 +8,5 @@ module dev.jdesk.editor.core {
 
     exports dev.jdesk.editor.core.fs;
     exports dev.jdesk.editor.core.doc;
+    exports dev.jdesk.editor.core.search;
 }

@@ -1,0 +1,24 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T115210Z-01da",
+  "category" : "integration",
+  "suite" : "real-git-acceptance",
+  "status" : "COMPLETE",
+  "startedAtUtc" : "2026-07-13T11:52:10.565851Z",
+  "os" : {
+    "name" : "Mac OS X",
+    "version" : "26.5.1",
+    "arch" : "aarch64"
+  },
+  "versions" : {
+    "java" : "25.0.3"
+  },
+  "appCommit" : "eaa358c6b4963cfbff33060e67fb4eb805191897",
+  "appDirty" : true,
+  "jdeskSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "jdeskDirty" : false,
+  "jdeskPinnedSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "endedAtUtc" : "2026-07-13T11:52:20.211113Z",
+  "outcome" : "PASS",
+  "testIds" : [ "GIT-IT" ]
+}

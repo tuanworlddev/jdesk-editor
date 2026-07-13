@@ -1,0 +1,11 @@
+{
+  "name": "jdesk-editor-lsp-servers",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pinned language servers bundled with JDesk Editor (real TS/JS + Python servers).",
+  "dependencies": {
+    "typescript": "5.9.2",
+    "typescript-language-server": "4.3.3",
+    "pyright": "1.1.405"
+  }
+}
