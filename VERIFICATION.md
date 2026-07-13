@@ -14,6 +14,8 @@ full `clean check`) live in `docs/JDESK_AUDIT.md`, not this table.
 
 | Test | Outcome | Evidence | Detail |
 |---|---|---|---|
+| DOD-no-disabled-tests | ✅ PASS | `docs/verification/runs/20260713T122802Z-3243` | disabled/skipped test markers in product+ui source: 0 |
+| DOD-version-lint | ✅ PASS | `docs/verification/runs/20260713T122802Z-3243` | no dynamic/latest versions in build files |
 | E2E-01-workspace | ✅ PASS | `docs/verification/runs/20260713T111904Z-44ef` | explorer ids: ['folder:src', 'file:README.md'] |
 | E2E-02-open | ✅ PASS | `docs/verification/runs/20260713T111904Z-44ef` | opened README.md, content='# Demo\n' |
 | E2E-03-edit | ✅ PASS | `docs/verification/runs/20260713T111904Z-44ef` | post-edit java version=2, text='# Demo\n\nedited by e2e\n' |
