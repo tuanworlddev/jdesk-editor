@@ -42,7 +42,7 @@ function TreeNode({ entry, depth }: { entry: FsEntry; depth: number }) {
   const semanticId = entry.directory ? `folder:${entry.relPath}` : `file:${entry.relPath}`;
   const isActive = !!activeUri && activeUri.endsWith('/' + entry.relPath);
   const icon = entry.directory
-    ? { path: expanded ? mdiFolderOpen : mdiFolder, color: '#7aa2c9' }
+    ? { path: expanded ? mdiFolderOpen : mdiFolder, color: '#bd93f9' }
     : fileIcon(entry.name);
 
   const onActivate = () => (entry.directory ? toggleDir(entry.relPath) : openFile(entry.relPath));
@@ -51,7 +51,7 @@ function TreeNode({ entry, depth }: { entry: FsEntry; depth: number }) {
     <>
       <div
         className={`group flex h-[24px] cursor-pointer select-none items-center gap-1 pr-2 text-[13px]
-          ${isActive ? 'bg-[#22303a] text-[--color-fg-bright]' : 'hover:bg-[--color-bg-elev]'}`}
+          ${isActive ? 'bg-[--color-selection] text-[--color-fg-bright]' : 'hover:bg-[--color-bg-elev]'}`}
         data-semantic-id={semanticId}
         role="treeitem"
         aria-expanded={entry.directory ? expanded : undefined}

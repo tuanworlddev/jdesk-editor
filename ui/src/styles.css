@@ -1,20 +1,26 @@
 @import 'tailwindcss';
 @import '@xterm/xterm/css/xterm.css';
 
-/* Design tokens as a Tailwind v4 theme — original styling (spec §8.1), not VS Code's. */
+/* Official Dracula palette (https://draculatheme.com) as Tailwind v4 theme tokens. */
 @theme {
-  --color-bg: #14161b;
-  --color-bg-elev: #1b1e25;
-  --color-bg-sidebar: #181b21;
-  --color-bg-activity: #0e1014;
-  --color-panel: #16181e;
-  --color-border: #262b34;
-  --color-fg: #c7ccd6;
-  --color-fg-dim: #6b7280;
-  --color-fg-bright: #eef1f6;
-  --color-accent: #4dd6c1;
-  --color-accent-dim: #2f8577;
-  --color-danger: #f0806a;
+  --color-bg: #282a36;          /* Dracula background */
+  --color-bg-elev: #343746;     /* elevated tabs/panels */
+  --color-bg-sidebar: #21222c;  /* darker background */
+  --color-bg-activity: #191a21; /* darkest */
+  --color-panel: #21222c;
+  --color-border: #191a21;
+  --color-selection: #44475a;   /* current line / selection */
+  --color-fg: #f8f8f2;          /* Dracula foreground */
+  --color-fg-dim: #6272a4;      /* Dracula comment */
+  --color-fg-bright: #ffffff;
+  --color-accent: #bd93f9;      /* Dracula purple */
+  --color-accent-2: #ff79c6;    /* Dracula pink */
+  --color-cyan: #8be9fd;        /* Dracula cyan */
+  --color-green: #50fa7b;       /* Dracula green */
+  --color-yellow: #f1fa8c;      /* Dracula yellow */
+  --color-accent-dim: #44475a;
+  --color-danger: #ff5555;      /* Dracula red */
+  --color-statusbar: #191a21;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 

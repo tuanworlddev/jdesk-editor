@@ -42,7 +42,7 @@ export const useStore = create<EditorStore>((set, get) => ({
   tabs: [],
   activeUri: null,
   statusMessage: 'Ready',
-  pointer: { visible: false, x: 0, y: 0, label: '', color: '#4dd6c1' },
+  pointer: { visible: false, x: 0, y: 0, label: '', color: '#bd93f9' },
   pointerEverShown: false,
 
   async openWorkspace(path: string) {

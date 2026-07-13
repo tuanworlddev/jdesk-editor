@@ -46,7 +46,7 @@ on('editor.docChanged', async (payload) => {
       const node = editor.getDomNode();
       if (vp && node) {
         const r = node.getBoundingClientRect();
-        store.showPointer(r.left + vp.left + 2, r.top + vp.top + 8, 'Claude', '#4dd6c1');
+        store.showPointer(r.left + vp.left + 2, r.top + vp.top + 8, 'Claude', '#bd93f9');
       }
     }, 120);
     try {

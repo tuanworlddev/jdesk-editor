@@ -80,7 +80,7 @@ export function AgentPanel() {
         {messages.map((m, i) => (
           <div key={i} className={`rounded-lg px-3 py-2 text-[12.5px] leading-relaxed
             ${m.role === 'user'
-              ? 'ml-6 bg-[#22303a] text-[--color-fg-bright]'
+              ? 'ml-6 bg-[--color-selection] text-[--color-fg-bright]'
               : 'mr-2 bg-[--color-bg-elev] text-[--color-fg]'}`}>
             {m.text}
           </div>

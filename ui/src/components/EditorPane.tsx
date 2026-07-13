@@ -19,7 +19,7 @@ export function EditorPane() {
     if (!containerRef.current) return;
     const editor = monaco.editor.create(containerRef.current, {
       model: null,
-      theme: 'jdesk-dark',
+      theme: 'dracula',
       automaticLayout: true,
       fontSize: 13,
       fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
@@ -69,15 +69,56 @@ export function EditorPane() {
   );
 }
 
-// Register a distinct dark theme (original styling, not VS Code's — spec §8.1).
-monaco.editor.defineTheme('jdesk-dark', {
+// Official Dracula theme for Monaco (https://draculatheme.com token mapping).
+monaco.editor.defineTheme('dracula', {
   base: 'vs-dark',
   inherit: true,
-  rules: [],
+  rules: [
+    { token: '', foreground: 'f8f8f2', background: '282a36' },
+    { token: 'comment', foreground: '6272a4' },
+    { token: 'string', foreground: 'f1fa8c' },
+    { token: 'number', foreground: 'bd93f9' },
+    { token: 'constant.numeric', foreground: 'bd93f9' },
+    { token: 'constant.language', foreground: 'bd93f9' },
+    { token: 'keyword', foreground: 'ff79c6' },
+    { token: 'keyword.operator', foreground: 'ff79c6' },
+    { token: 'operator', foreground: 'ff79c6' },
+    { token: 'storage', foreground: 'ff79c6' },
+    { token: 'type', foreground: '8be9fd', fontStyle: 'italic' },
+    { token: 'type.identifier', foreground: '8be9fd' },
+    { token: 'identifier', foreground: 'f8f8f2' },
+    { token: 'function', foreground: '50fa7b' },
+    { token: 'entity.name.function', foreground: '50fa7b' },
+    { token: 'variable', foreground: 'f8f8f2' },
+    { token: 'variable.parameter', foreground: 'ffb86c', fontStyle: 'italic' },
+    { token: 'tag', foreground: 'ff79c6' },
+    { token: 'metatag', foreground: 'ff79c6' },
+    { token: 'attribute.name', foreground: '50fa7b' },
+    { token: 'attribute.value', foreground: 'f1fa8c' },
+    { token: 'delimiter', foreground: 'f8f8f2' },
+    { token: 'delimiter.bracket', foreground: 'f8f8f2' },
+    { token: 'string.key.json', foreground: '8be9fd' },
+    { token: 'string.value.json', foreground: 'f1fa8c' },
+    { token: 'keyword.json', foreground: 'bd93f9' },
+  ],
   colors: {
-    'editor.background': '#15171c',
-    'editorGutter.background': '#15171c',
-    'editorLineNumber.foreground': '#3b4048',
-    'editorLineNumber.activeForeground': '#8a94a6',
+    'editor.background': '#282a36',
+    'editor.foreground': '#f8f8f2',
+    'editor.lineHighlightBackground': '#44475a75',
+    'editor.selectionBackground': '#44475a',
+    'editor.selectionHighlightBackground': '#424450',
+    'editorCursor.foreground': '#f8f8f2',
+    'editorLineNumber.foreground': '#6272a4',
+    'editorLineNumber.activeForeground': '#f8f8f2',
+    'editorGutter.background': '#282a36',
+    'editorIndentGuide.background': '#3b3d4b',
+    'editorIndentGuide.activeBackground': '#6272a4',
+    'editorWhitespace.foreground': '#3b3d4b',
+    'editorSuggestWidget.background': '#21222c',
+    'editorSuggestWidget.selectedBackground': '#44475a',
+    'editorSuggestWidget.border': '#191a21',
+    'editorHoverWidget.background': '#21222c',
+    'editorBracketMatch.background': '#44475a',
+    'editorBracketMatch.border': '#bd93f9',
   },
 });

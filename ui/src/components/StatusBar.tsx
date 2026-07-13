@@ -9,14 +9,16 @@ export function StatusBar() {
   const active = tabs.find((t) => t.uri === activeUri);
 
   return (
-    <footer className="flex items-center justify-between bg-[--color-accent-dim] px-3 text-[11.5px]
-      font-medium text-[#05110e]">
+    <footer className="flex items-center justify-between border-t border-[--color-border]
+      bg-[--color-statusbar] px-3 text-[11.5px] font-medium text-[--color-fg]">
       <div className="flex items-center gap-3">
-        <span className="flex items-center gap-1"><Icon path={mdiSourceBranch} size={13} /> main</span>
-        <span>{active ? active.relPath : 'no file'}</span>
+        <span className="flex items-center gap-1 text-[--color-green]">
+          <Icon path={mdiSourceBranch} size={13} /> main
+        </span>
+        <span className="text-[--color-fg-dim]">{active ? active.relPath : 'no file'}</span>
       </div>
-      <div className="flex items-center gap-3.5">
-        {active?.dirty && <span className="font-bold">unsaved</span>}
+      <div className="flex items-center gap-3.5 text-[--color-fg-dim]">
+        {active?.dirty && <span className="font-bold text-[--color-yellow]">unsaved</span>}
         <span className="truncate max-w-[360px]">{statusMessage}</span>
         <span>UTF-8</span>
         <span>LF</span>

@@ -20,7 +20,16 @@ export function TerminalPanel({ visible }: { visible: boolean }) {
     const term = new Terminal({
       fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
       fontSize: 12.5,
-      theme: { background: '#16181e', foreground: '#c7ccd6', cursor: '#4dd6c1' },
+      // Official Dracula ANSI palette.
+      theme: {
+        background: '#21222c', foreground: '#f8f8f2', cursor: '#f8f8f2',
+        selectionBackground: '#44475a',
+        black: '#21222c', red: '#ff5555', green: '#50fa7b', yellow: '#f1fa8c',
+        blue: '#bd93f9', magenta: '#ff79c6', cyan: '#8be9fd', white: '#f8f8f2',
+        brightBlack: '#6272a4', brightRed: '#ff6e6e', brightGreen: '#69ff94',
+        brightYellow: '#ffffa5', brightBlue: '#d6acff', brightMagenta: '#ff92df',
+        brightCyan: '#a4ffff', brightWhite: '#ffffff',
+      },
       cursorBlink: true,
       convertEol: false,
     });
