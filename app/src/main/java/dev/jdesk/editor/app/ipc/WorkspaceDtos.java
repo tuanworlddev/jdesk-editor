@@ -19,9 +19,15 @@ public final class WorkspaceDtos {
 
     public record DirListing(String relPath, List<FsEntry> entries) {}
 
+    public record FileList(List<String> paths) {}
+
     public record CreateFileRequest(String relPath) {}
 
     public record CreateFolderRequest(String relPath) {}
+
+    public record RenameRequest(String fromRelPath, String toRelPath) {}
+
+    public record DeleteRequest(String relPath, boolean recursive) {}
 
     public record FsMutationResult(String relPath, boolean ok) {}
 }

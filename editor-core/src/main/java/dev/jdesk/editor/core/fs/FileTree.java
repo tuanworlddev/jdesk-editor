@@ -90,6 +90,33 @@ public final class FileTree {
         }
     }
 
+    /** All visible file paths under the workspace (workspace-relative), bounded, for Quick Open. */
+    public List<String> allFilePaths(int limit) {
+        List<String> out = new ArrayList<>();
+        collectFiles(paths.root(), out, limit);
+        return out;
+    }
+
+    private void collectFiles(Path dir, List<String> out, int limit) {
+        if (out.size() >= limit) {
+            return;
+        }
+        try (Stream<Path> children = Files.list(dir).sorted()) {
+            for (Path child : (Iterable<Path>) children::iterator) {
+                if (out.size() >= limit || ignored.contains(child.getFileName().toString())) {
+                    continue;
+                }
+                if (Files.isDirectory(child)) {
+                    collectFiles(child, out, limit);
+                } else {
+                    out.add(paths.root().relativize(child).toString().replace('\\', '/'));
+                }
+            }
+        } catch (IOException e) {
+            // unreadable dir contributes nothing
+        }
+    }
+
     /** Counts all visible files under the workspace (used by performance/interactivity checks). */
     public long countVisibleFiles() {
         return countVisibleFiles(paths.root());

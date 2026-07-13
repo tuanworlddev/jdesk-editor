@@ -1,38 +1,63 @@
 import { useEffect, useState } from 'react';
 import {
   mdiFileTree, mdiMagnify, mdiSourceBranch, mdiRobotOutline, mdiConsoleLine, mdiFolderOpenOutline,
+  mdiAlertCircleOutline, mdiClose,
 } from '@mdi/js';
 import { useStore } from './store';
 import { Explorer } from './components/Explorer';
+import { SearchPanel } from './components/SearchPanel';
+import { SourceControlPanel } from './components/SourceControlPanel';
 import { Tabs } from './components/Tabs';
 import { EditorPane } from './components/EditorPane';
 import { StatusBar } from './components/StatusBar';
 import { AgentPanel } from './components/AgentPanel';
 import { TerminalPanel } from './components/TerminalPanel';
 import { PointerOverlay } from './components/PointerOverlay';
+import { QuickInput, type QuickMode, type Command } from './components/QuickInput';
 import { Icon } from './components/Icon';
-import { commands } from './ipc';
 
 type Activity = 'explorer' | 'search' | 'git';
+type BottomTab = 'terminal' | 'problems';
 
 export function App() {
   const workspace = useStore((s) => s.workspace);
   const saveActive = useStore((s) => s.saveActive);
   const [activity, setActivity] = useState<Activity>('explorer');
   const [agentOpen, setAgentOpen] = useState(true);
-  const [terminalOpen, setTerminalOpen] = useState(false);
+  const [bottomOpen, setBottomOpen] = useState(false);
+  const [bottomTab, setBottomTab] = useState<BottomTab>('terminal');
+  const [quick, setQuick] = useState<QuickMode | null>(null);
 
-  // Menu actions from the native menu bar are forwarded as events; handle the UI ones here.
+  const drv = () => (window as any).__editorDriver;
+  const commandList: Command[] = [
+    { id: 'file.openFolder', label: 'File: Open Folder…', hint: '⌘O', run: () => fire('file.openFolder') },
+    { id: 'file.newFile', label: 'File: New File', hint: '⌘N', run: () => fire('file.newFile') },
+    { id: 'file.save', label: 'File: Save', hint: '⌘S', run: () => void saveActive() },
+    { id: 'edit.undo', label: 'Edit: Undo', hint: '⌘Z', run: () => drv()?.undo?.() },
+    { id: 'edit.redo', label: 'Edit: Redo', hint: '⇧⌘Z', run: () => drv()?.redo?.() },
+    { id: 'view.explorer', label: 'View: Explorer', run: () => setActivity('explorer') },
+    { id: 'view.search', label: 'View: Search', hint: '⇧⌘F', run: () => setActivity('search') },
+    { id: 'view.git', label: 'View: Source Control', run: () => setActivity('git') },
+    { id: 'view.terminal', label: 'View: Toggle Terminal', hint: '⌃`', run: () => setBottomOpen((v) => !v) },
+    { id: 'view.problems', label: 'View: Problems', run: () => { setBottomTab('problems'); setBottomOpen(true); } },
+    { id: 'view.agent', label: 'View: Toggle Agent Panel', run: () => setAgentOpen((v) => !v) },
+    { id: 'go.quickOpen', label: 'Go to File…', hint: '⌘P', run: () => setQuick('files') },
+  ];
+
+  function fire(actionId: string) {
+    window.dispatchEvent(new CustomEvent('jdesk:menu', { detail: { actionId } }));
+  }
+
+  // Menu actions from the native menu bar → run the same UI command.
   useEffect(() => {
     const handlers: Record<string, () => void> = {
       'file.save': () => void saveActive(),
       'file.saveAll': () => void saveActive(),
-      'edit.undo': () => (window as any).__editorDriver?.undo?.(),
-      'edit.redo': () => (window as any).__editorDriver?.redo?.(),
-      'view.terminal': () => setTerminalOpen((v) => !v),
+      'edit.undo': () => drv()?.undo?.(),
+      'edit.redo': () => drv()?.redo?.(),
+      'view.terminal': () => setBottomOpen((v) => !v),
       'view.agent': () => setAgentOpen((v) => !v),
       'view.explorer': () => setActivity('explorer'),
-      'agent.start': () => setAgentOpen(true),
     };
     const onMenu = (e: Event) => {
       const id = (e as CustomEvent<{ actionId: string }>).detail?.actionId;
@@ -42,11 +67,19 @@ export function App() {
     return () => window.removeEventListener('jdesk:menu', onMenu as EventListener);
   }, [saveActive]);
 
-  async function openFolder() {
-    // The native picker is triggered Java-side via the menu; this button asks for it too.
-    window.dispatchEvent(new CustomEvent('jdesk:menu', { detail: { actionId: 'file.openFolder' } }));
-    void commands.workspace.getState(); // no-op keeps the binding referenced
-  }
+  // Keyboard shortcuts (VS Code style).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const mod = e.metaKey || e.ctrlKey;
+      if (mod && e.shiftKey && e.key.toLowerCase() === 'p') { e.preventDefault(); setQuick('commands'); }
+      else if (mod && !e.shiftKey && e.key.toLowerCase() === 'p') { e.preventDefault(); setQuick('files'); }
+      else if (mod && e.shiftKey && e.key.toLowerCase() === 'f') { e.preventDefault(); setActivity('search'); }
+      else if (mod && e.key.toLowerCase() === 'b') { e.preventDefault(); setActivity((a) => a); }
+      else if (e.ctrlKey && e.key === '`') { e.preventDefault(); setBottomOpen((v) => !v); }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   const activityItems: { id: Activity | 'agent' | 'terminal'; icon: string; label: string }[] = [
     { id: 'explorer', icon: mdiFileTree, label: 'Explorer' },
@@ -62,21 +95,20 @@ export function App() {
       gridTemplateRows: '1fr 24px',
       gridTemplateAreas: `'activity sidebar editor agent' 'status status status status'`,
     }}>
-      {/* Activity bar */}
-      <nav className="flex flex-col items-center gap-1 border-r border-[--color-border]
-        bg-[--color-bg-activity] pt-2" style={{ gridArea: 'activity' }}>
+      <nav className="flex flex-col items-center gap-1 border-r border-[--color-border] bg-[--color-bg-activity] pt-2"
+        style={{ gridArea: 'activity' }}>
         {activityItems.map((item) => {
-          const active = (item.id === 'agent' && agentOpen) || (item.id === 'terminal' && terminalOpen)
+          const active = (item.id === 'agent' && agentOpen) || (item.id === 'terminal' && bottomOpen)
             || item.id === activity;
           return (
             <button key={item.id} title={item.label} aria-label={item.label}
               onClick={() => {
                 if (item.id === 'agent') setAgentOpen((v) => !v);
-                else if (item.id === 'terminal') setTerminalOpen((v) => !v);
+                else if (item.id === 'terminal') { setBottomTab('terminal'); setBottomOpen((v) => !v); }
                 else setActivity(item.id);
               }}
-              className={`relative flex h-11 w-11 items-center justify-center rounded-[10px]
-                transition-colors ${active ? 'text-[--color-accent]' : 'text-[--color-fg-dim] hover:bg-[--color-bg-elev] hover:text-[--color-fg]'}`}>
+              className={`relative flex h-11 w-11 items-center justify-center rounded-[10px] transition-colors
+                ${active ? 'text-[--color-accent]' : 'text-[--color-fg-dim] hover:bg-[--color-bg-elev] hover:text-[--color-fg]'}`}>
               {active && <span className="absolute left-0 h-7 w-[2px] rounded-r bg-[--color-accent]" />}
               <Icon path={item.icon} size={22} />
             </button>
@@ -84,43 +116,53 @@ export function App() {
         })}
       </nav>
 
-      {/* Sidebar */}
-      <aside className="flex flex-col overflow-hidden border-r border-[--color-border]
-        bg-[--color-bg-sidebar]" style={{ gridArea: 'sidebar' }}>
-        <div className="flex items-center justify-between px-3 py-2.5">
-          <span className="truncate text-[11px] font-semibold uppercase tracking-wider text-[--color-fg-dim]">
-            {workspace ? workspace.rootName : 'No Folder'}
-          </span>
-          <button title="Open Folder" onClick={openFolder}
-            className="text-[--color-fg-dim] hover:text-[--color-fg]">
-            <Icon path={mdiFolderOpenOutline} size={16} />
-          </button>
-        </div>
-        {activity === 'explorer' && <Explorer />}
-        {activity === 'search' && <div className="px-4 py-3 text-[12px] text-[--color-fg-dim]">Search — use the agent or the terminal (grep) for now.</div>}
-        {activity === 'git' && <div className="px-4 py-3 text-[12px] text-[--color-fg-dim]">Source Control — git status/diff via the terminal.</div>}
+      <aside className="flex flex-col overflow-hidden border-r border-[--color-border] bg-[--color-bg-sidebar]"
+        style={{ gridArea: 'sidebar' }}>
+        {activity === 'explorer' && (
+          <>
+            <div className="flex items-center justify-between px-3 pt-2">
+              <span className="truncate text-[11px] font-semibold uppercase tracking-wider text-[--color-fg-dim]">
+                {workspace ? 'Explorer' : 'No Folder'}
+              </span>
+              <button title="Open Folder" onClick={() => fire('file.openFolder')}
+                className="text-[--color-fg-dim] hover:text-[--color-fg]">
+                <Icon path={mdiFolderOpenOutline} size={16} />
+              </button>
+            </div>
+            <Explorer />
+          </>
+        )}
+        {activity === 'search' && <SearchPanel />}
+        {activity === 'git' && <SourceControlPanel />}
       </aside>
 
-      {/* Editor area (+ terminal panel) */}
       <main className="flex min-w-0 flex-col bg-[--color-bg]" style={{ gridArea: 'editor' }}>
         <Tabs />
         <div className="relative flex min-h-0 flex-1 flex-col">
-          <div className={terminalOpen ? 'min-h-0 flex-1' : 'flex-1'}>
-            <EditorPane />
-          </div>
-          {terminalOpen && (
-            <div className="flex h-[220px] flex-col border-t border-[--color-border] bg-[--color-panel]">
-              <div className="flex items-center gap-1.5 px-3 py-1 text-[11px] font-semibold uppercase
-                tracking-wider text-[--color-fg-dim]">
-                <Icon path={mdiConsoleLine} size={14} /> Terminal
+          <div className="min-h-0 flex-1"><EditorPane /></div>
+          {bottomOpen && (
+            <div className="flex h-[240px] flex-col border-t border-[--color-border] bg-[--color-panel]">
+              <div className="flex items-center gap-1 border-b border-[--color-border] px-2">
+                <BottomTabBtn label="Terminal" icon={mdiConsoleLine} active={bottomTab === 'terminal'} onClick={() => setBottomTab('terminal')} />
+                <BottomTabBtn label="Problems" icon={mdiAlertCircleOutline} active={bottomTab === 'problems'} onClick={() => setBottomTab('problems')} />
+                <button title="Close panel" onClick={() => setBottomOpen(false)}
+                  className="ml-auto flex h-6 w-6 items-center justify-center rounded text-[--color-fg-dim] hover:bg-[--color-bg-elev]">
+                  <Icon path={mdiClose} size={15} />
+                </button>
               </div>
-              <div className="min-h-0 flex-1"><TerminalPanel visible={terminalOpen} /></div>
+              <div className="min-h-0 flex-1" style={{ display: bottomTab === 'terminal' ? 'block' : 'none' }}>
+                <TerminalPanel visible={bottomOpen && bottomTab === 'terminal'} />
+              </div>
+              {bottomTab === 'problems' && (
+                <div className="flex min-h-0 flex-1 items-center justify-center text-[12px] text-[--color-fg-dim]">
+                  No problems detected in the workspace.
+                </div>
+              )}
             </div>
           )}
         </div>
       </main>
 
-      {/* Agent pane */}
       {agentOpen && (
         <aside className="overflow-hidden border-l border-[--color-border]" style={{ gridArea: 'agent' }}>
           <AgentPanel />
@@ -129,6 +171,18 @@ export function App() {
 
       <div style={{ gridArea: 'status' }}><StatusBar /></div>
       <PointerOverlay />
+      {quick && <QuickInput mode={quick} cmds={commandList} onClose={() => setQuick(null)} />}
     </div>
+  );
+}
+
+function BottomTabBtn({ label, icon, active, onClick }:
+  { label: string; icon: string; active: boolean; onClick: () => void }) {
+  return (
+    <button onClick={onClick}
+      className={`flex items-center gap-1.5 border-b-2 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider
+        ${active ? 'border-[--color-accent] text-[--color-fg]' : 'border-transparent text-[--color-fg-dim] hover:text-[--color-fg]'}`}>
+      <Icon path={icon} size={14} /> {label}
+    </button>
   );
 }

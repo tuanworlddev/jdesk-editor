@@ -136,6 +136,44 @@ export function javaVersion(uri: string): number {
   return entries.get(uri)?.javaVersion ?? 0;
 }
 
+// ---- diff models (git diff view) — separate from editable models ----
+interface DiffEntry {
+  original: monaco.editor.ITextModel;
+  modified: monaco.editor.ITextModel;
+  relPath: string;
+}
+const diffModels = new Map<string, DiffEntry>();
+
+export function ensureDiffModel(diffUri: string, original: string, modified: string, relPath: string): DiffEntry {
+  const existing = diffModels.get(diffUri);
+  if (existing) {
+    existing.original.setValue(original);
+    existing.modified.setValue(modified);
+    return existing;
+  }
+  const lang = languageForPath(relPath);
+  const entry: DiffEntry = {
+    original: monaco.editor.createModel(original, lang),
+    modified: monaco.editor.createModel(modified, lang),
+    relPath,
+  };
+  diffModels.set(diffUri, entry);
+  return entry;
+}
+
+export function getDiffModel(diffUri: string): DiffEntry | undefined {
+  return diffModels.get(diffUri);
+}
+
+export function disposeDiffModel(diffUri: string) {
+  const e = diffModels.get(diffUri);
+  if (e) {
+    e.original.dispose();
+    e.modified.dispose();
+    diffModels.delete(diffUri);
+  }
+}
+
 /**
  * Applies a Java-authoritative content update (an agent edit arriving via MCP) to a live model.
  * Suppresses the change echo so we don't send it back, and re-seats the model to the new content

@@ -48,6 +48,14 @@ public final class WorkspaceFacade {
         return CompletableFuture.completedFuture(stateOf(current));
     }
 
+    @DesktopCommand("workspace.allFiles")
+    @RequiresCapability("editor:core")
+    public CompletionStage<WorkspaceDtos.FileList> allFiles(InvocationContext context) {
+        EditorSession current = require();
+        return CompletableFuture.completedFuture(
+                new WorkspaceDtos.FileList(current.fileTree().allFilePaths(20_000)));
+    }
+
     @DesktopCommand("workspace.children")
     @RequiresCapability("editor:core")
     public CompletionStage<WorkspaceDtos.DirListing> children(
@@ -82,6 +90,51 @@ public final class WorkspaceFacade {
                     dev.jdesk.editor.api.EditorErrorCode.INTERNAL_ERROR,
                     "Cannot create folder " + request.relPath(), e);
         }
+        return CompletableFuture.completedFuture(
+                new WorkspaceDtos.FsMutationResult(request.relPath(), true));
+    }
+
+    @DesktopCommand("workspace.rename")
+    @RequiresCapability("editor:core")
+    public CompletionStage<WorkspaceDtos.FsMutationResult> rename(
+            WorkspaceDtos.RenameRequest request, InvocationContext context) {
+        EditorSession current = require();
+        var from = current.paths().resolveExisting(request.fromRelPath());
+        current.paths().ensureParentDirectories(request.toRelPath());
+        var to = current.paths().resolveForCreate(request.toRelPath());
+        try {
+            java.nio.file.Files.move(from.absolute(), to.absolute());
+        } catch (java.io.IOException e) {
+            throw new dev.jdesk.editor.api.EditorException(
+                    dev.jdesk.editor.api.EditorErrorCode.INTERNAL_ERROR,
+                    "Cannot rename " + request.fromRelPath(), e);
+        }
+        current.documents().close(from.uri());
+        return CompletableFuture.completedFuture(
+                new WorkspaceDtos.FsMutationResult(request.toRelPath(), true));
+    }
+
+    @DesktopCommand("workspace.delete")
+    @RequiresCapability("editor:core")
+    public CompletionStage<WorkspaceDtos.FsMutationResult> delete(
+            WorkspaceDtos.DeleteRequest request, InvocationContext context) {
+        EditorSession current = require();
+        var path = current.paths().resolveExisting(request.relPath());
+        try {
+            if (request.recursive() && java.nio.file.Files.isDirectory(path.absolute())) {
+                try (var walk = java.nio.file.Files.walk(path.absolute())) {
+                    walk.sorted(java.util.Comparator.reverseOrder())
+                            .forEach(p -> { try { java.nio.file.Files.delete(p); } catch (Exception ignored) {} });
+                }
+            } else {
+                java.nio.file.Files.delete(path.absolute());
+            }
+        } catch (java.io.IOException e) {
+            throw new dev.jdesk.editor.api.EditorException(
+                    dev.jdesk.editor.api.EditorErrorCode.INTERNAL_ERROR,
+                    "Cannot delete " + request.relPath(), e);
+        }
+        current.documents().close(path.uri());
         return CompletableFuture.completedFuture(
                 new WorkspaceDtos.FsMutationResult(request.relPath(), true));
     }

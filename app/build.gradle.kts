@@ -15,6 +15,7 @@ dependencies {
     implementation(project(":editor-api"))
     implementation(project(":editor-core"))
     implementation(project(":agent-mcp"))
+    implementation(project(":git-service"))
     compileOnly(libs.jackson.databind)
     // Compile-time @DesktopCommand registration + TypeScript binding generation (we are the
     // first real consumer of the typed-bindings path — see docs/JDESK_AUDIT.md gap 6).

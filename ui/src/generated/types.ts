@@ -51,6 +51,21 @@ export interface CreateFolderRequest {
   relPath: string;
 }
 
+export interface DeleteRequest {
+  relPath: string;
+  recursive: boolean;
+}
+
+export interface Diff {
+  relPath: string;
+  original: string;
+  modified: string;
+}
+
+export interface DiffRequest {
+  relPath: string;
+}
+
 export interface DirListing {
   relPath: string;
   entries: FsEntry[];
@@ -66,6 +81,22 @@ export interface DocSnapshot {
   dirty: boolean;
 }
 
+export interface FileList {
+  paths: string[];
+}
+
+export interface FileMatches {
+  relPath: string;
+  matches: Match[];
+}
+
+export interface FileStatus {
+  relPath: string;
+  index: string;
+  worktree: string;
+  untracked: boolean;
+}
+
 export interface FsEntry {
   name: string;
   relPath: string;
@@ -76,6 +107,12 @@ export interface FsEntry {
 export interface FsMutationResult {
   relPath: string;
   ok: boolean;
+}
+
+export interface Match {
+  line: number;
+  column: number;
+  preview: string;
 }
 
 export interface OpenDocRequest {
@@ -97,14 +134,31 @@ export interface Output {
   exitCode: number;
 }
 
+export interface Query {
+  text: string;
+  regex: boolean;
+  caseSensitive: boolean;
+  maxResults: number;
+}
+
 export interface ReadRequest {
   terminalId: string;
+}
+
+export interface RenameRequest {
+  fromRelPath: string;
+  toRelPath: string;
 }
 
 export interface ResizeRequest {
   terminalId: string;
   cols: number;
   rows: number;
+}
+
+export interface Results {
+  files: FileMatches[];
+  totalMatches: number;
 }
 
 export interface SaveRequest {
@@ -121,6 +175,14 @@ export interface SaveResult {
 
 export interface StartRequest {
   prompt: string;
+}
+
+export interface Status {
+  available: boolean;
+  branch: string;
+  ahead: number;
+  behind: number;
+  files: FileStatus[];
 }
 
 export interface StatusRequest {

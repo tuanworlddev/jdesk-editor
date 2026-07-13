@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 import { useStore } from '../store';
 import { monaco } from '../monaco-setup';
 import { getModel } from '../models';
+import { DiffEditor } from './DiffEditor';
+import { Breadcrumbs } from './Breadcrumbs';
 
 /**
  * A single Monaco editor instance for the whole editor group (spec §8.2). Switching tabs swaps the
@@ -14,6 +16,9 @@ export function EditorPane() {
   const viewStates = useRef(new Map<string, monaco.editor.ICodeEditorViewState | null>());
   const currentUri = useRef<string | null>(null);
   const activeUri = useStore((s) => s.activeUri);
+  const tabs = useStore((s) => s.tabs);
+  const activeTab = tabs.find((t) => t.uri === activeUri);
+  const isDiff = activeTab?.kind === 'diff';
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -39,7 +44,7 @@ export function EditorPane() {
     if (currentUri.current && currentUri.current !== activeUri) {
       viewStates.current.set(currentUri.current, editor.saveViewState());
     }
-    if (activeUri) {
+    if (activeUri && !isDiff) {
       const model = getModel(activeUri);
       if (model) {
         editor.setModel(model);
@@ -50,11 +55,14 @@ export function EditorPane() {
     } else {
       editor.setModel(null);
     }
-    currentUri.current = activeUri;
-  }, [activeUri]);
+    currentUri.current = isDiff ? null : activeUri;
+  }, [activeUri, isDiff]);
 
   return (
-    <div className="relative h-full w-full">
+    <div className="relative flex h-full w-full flex-col">
+      {activeTab && !isDiff && <Breadcrumbs relPath={activeTab.relPath} />}
+      <div className="relative min-h-0 flex-1">
+      {isDiff && activeUri && <DiffEditor key={activeUri} diffUri={activeUri} />}
       {!activeUri && (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-[--color-fg-dim]">
           <h1 className="m-0 text-[26px] font-semibold tracking-tight text-[--color-fg-bright]">JDesk Editor</h1>
@@ -64,7 +72,9 @@ export function EditorPane() {
           </p>
         </div>
       )}
-      <div ref={containerRef} className="absolute inset-0" style={{ display: activeUri ? 'block' : 'none' }} />
+      <div ref={containerRef} className="absolute inset-0"
+        style={{ display: activeUri && !isDiff ? 'block' : 'none' }} />
+      </div>
     </div>
   );
 }

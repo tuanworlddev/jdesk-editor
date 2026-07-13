@@ -76,7 +76,11 @@ public final class Main {
                 WorkspaceFacadeCommands.create(workspace),
                 DocumentFacadeCommands.create(documents),
                 dev.jdesk.editor.app.ipc.AgentFacadeCommands.create(agents),
-                dev.jdesk.editor.app.ipc.TerminalFacadeCommands.create(terminalFacade));
+                dev.jdesk.editor.app.ipc.TerminalFacadeCommands.create(terminalFacade),
+                dev.jdesk.editor.app.ipc.SearchFacadeCommands.create(
+                        new dev.jdesk.editor.app.ipc.SearchFacade(current::get)),
+                dev.jdesk.editor.app.ipc.GitFacadeCommands.create(
+                        new dev.jdesk.editor.app.ipc.GitFacade(current::get)));
 
         CapabilitySet capabilities = CapabilitySet.of(Set.of(
                 CapabilityGrant.forAllWindows("editor:core")));

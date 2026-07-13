@@ -9,6 +9,7 @@ module dev.jdesk.editor.app {
     requires dev.jdesk.runtime;
     requires transitive dev.jdesk.editor.core;
     requires dev.jdesk.editor.mcp;
+    requires dev.jdesk.editor.git;
     requires static com.fasterxml.jackson.databind;
 
     // The runtime binds command request/response records and event payloads reflectively.

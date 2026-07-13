@@ -4,6 +4,8 @@ import dev.jdesk.editor.core.doc.AtomicSaver;
 import dev.jdesk.editor.core.doc.DocumentStore;
 import dev.jdesk.editor.core.fs.FileTree;
 import dev.jdesk.editor.core.fs.PathService;
+import dev.jdesk.editor.core.search.SearchService;
+import dev.jdesk.editor.git.GitService;
 
 import java.nio.file.Path;
 
@@ -18,12 +20,24 @@ public final class EditorSession {
     private final PathService paths;
     private final FileTree fileTree;
     private final DocumentStore documents;
+    private final SearchService search;
+    private final GitService git;
 
     public EditorSession(Path root) {
         this.root = root;
         this.paths = new PathService(root);
         this.fileTree = new FileTree(paths);
         this.documents = new DocumentStore(paths, new AtomicSaver(), System::currentTimeMillis);
+        this.search = new SearchService(paths, fileTree);
+        this.git = new GitService(paths.root());
+    }
+
+    public SearchService search() {
+        return search;
+    }
+
+    public GitService git() {
+        return git;
     }
 
     public Path root() {
