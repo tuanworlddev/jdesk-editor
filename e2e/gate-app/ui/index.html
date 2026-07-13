@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>JDesk Editor — Monaco Worker Gate</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #1e1e1e; color: #ddd;
+        font-family: ui-monospace, monospace; }
+      #editor { position: absolute; top: 0; left: 0; right: 0; bottom: 120px; }
+      #status { position: absolute; left: 0; right: 0; bottom: 0; height: 120px;
+        overflow: auto; padding: 8px; font-size: 12px; border-top: 1px solid #333; }
+      .ok { color: #4ec9b0; } .bad { color: #f48771; }
+    </style>
+  </head>
+  <body>
+    <div id="editor"></div>
+    <div id="status">Monaco worker gate loading…</div>
+    <script type="module" src="/src/gate.ts"></script>
+  </body>
+</html>

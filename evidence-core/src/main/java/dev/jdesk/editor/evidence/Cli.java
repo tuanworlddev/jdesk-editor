@@ -29,6 +29,7 @@ public final class Cli {
         try {
             int exit = switch (command) {
                 case "wrap" -> wrap(environment, Arrays.copyOfRange(args, 1, args.length));
+                case "app-run" -> appRun(environment, Arrays.copyOfRange(args, 1, args.length));
                 case "verify" -> verify(environment, Arrays.copyOfRange(args, 1, args.length));
                 case "report" -> report(environment);
                 case "cite" -> cite(environment, Arrays.copyOfRange(args, 1, args.length));
@@ -59,6 +60,36 @@ public final class Cli {
         CommandRecorder.CommandResult result =
                 run.commands().run(argv, environment.repoRoot(), java.util.Map.of(), Duration.ofMinutes(30));
         run.addCommandResult(testId, result, "wrapped command: " + String.join(" ", argv));
+        RunOutcome outcome = run.finish();
+        System.out.println("run " + run.runId() + " -> " + outcome);
+        return outcome == RunOutcome.PASS ? 0 : 1;
+    }
+
+    /**
+     * Runs a self-driving app that writes {@code gate-results.json}, {@code app-info.json},
+     * {@code console.json}, and {@code screenshots/} into the run directory (passed via
+     * {@code JDESK_EDITOR_RUN_DIR}), then ingests those results and the real WebView backend.
+     */
+    private static int appRun(Environment environment, String[] args) {
+        int separator = Arrays.asList(args).indexOf("--");
+        if (separator < 2) {
+            System.err.println("usage: app-run <category> <suite> -- <argv...>");
+            return 2;
+        }
+        String category = args[0];
+        String suite = args[1];
+        List<String> argv = Arrays.asList(args).subList(separator + 1, args.length);
+
+        TestRun run = TestRun.start(environment, category, suite);
+        CommandRecorder.CommandResult result = run.commands().run(argv, environment.repoRoot(),
+                java.util.Map.of("JDESK_EDITOR_RUN_DIR", run.dir().toString()), Duration.ofMinutes(15));
+        run.mergeAppInfo();
+        run.ingestAppResults();
+        if (!result.succeeded()) {
+            // Surface a non-zero app exit even if it happened to write PASS rows.
+            run.addResult(TestResult.fail(suite + "-EXIT", result.durationMs(),
+                    List.of("commands.jsonl"), "app exit=" + result.exitCode() + " timedOut=" + result.timedOut()));
+        }
         RunOutcome outcome = run.finish();
         System.out.println("run " + run.runId() + " -> " + outcome);
         return outcome == RunOutcome.PASS ? 0 : 1;

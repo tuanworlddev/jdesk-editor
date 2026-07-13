@@ -14,9 +14,24 @@ full `clean check`) live in `docs/JDESK_AUDIT.md`, not this table.
 
 | Test | Outcome | Evidence | Detail |
 |---|---|---|---|
+| GATE-01 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | base worker computed 1 line change(s); 2 worker(s) spawned |
+| GATE-02 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | TS worker returned 1 semantic diagnostic(s) |
+| GATE-03 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | JSON worker produced 1 schema marker(s) |
+| GATE-04 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | 5 token type(s), 6 DOM span class(es) |
+| GATE-05 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | completion after 'arr.' includes push (39 entries) |
+| GATE-06 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | TS diagnostic 2322 at line 3 |
+| GATE-07 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | select='alpha' focus=true undo==before=true redo==typed=true |
+| GATE-08 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | 3/3 worker asset(s) served as JS (e.g. 'text/javascript; charset=utf-8') |
+| GATE-09 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | csp[221] script-src'self'=true eval-throws=true fn-throws=true no-unsafe-eval=true |
+| GATE-10 | ✅ PASS | `docs/verification/runs/20260713T105334Z-d829` | 0 genuine page error(s), 0 worker/load error(s), 1 benign monaco-cancellation(s) |
 | JDESK-CHECK-MACOS | ✅ PASS | `docs/verification/runs/20260713T102748Z-dc23` | wrapped command: /Users/rupphi/Projects/JDESK/JDesk/gradlew -p /Users/rupphi/Projects/JDESK/JDesk check -x :modules:jdesk-platform-windows:test --console=plain --no-daemon |
 | JDESK-NATIVE-SMOKE | ✅ PASS | `docs/verification/runs/20260713T103029Z-6ff9` | wrapped command: /Users/rupphi/Projects/JDESK/JDesk/gradlew -p /Users/rupphi/Projects/JDESK/JDesk --no-configuration-cache :test-apps:native-smoke:run -PjdeskPlatform=macos --console=plain --no-daemon |
 | JDESK-SECURITY-PROBE | ✅ PASS | `docs/verification/runs/20260713T103116Z-b8b4` | wrapped command: /Users/rupphi/Projects/JDESK/JDesk/gradlew -p /Users/rupphi/Projects/JDESK/JDesk --no-configuration-cache :test-apps:security-probe:run -PjdeskPlatform=macos --console=plain --no-daemon |
 | P0D-AGENT-PROBES | ✅ PASS | `docs/verification/runs/20260713T103004Z-5b9b` | wrapped command: bash scripts/phase0-agent-probes.sh |
+| S1 | ✅ PASS | `docs/verification/runs/20260713T105336Z-e06d` | 3 nodes registered, revision 3 |
+| S2 | ✅ PASS | `docs/verification/runs/20260713T105336Z-e06d` | pointer center inside gate.newFile = true |
+| S3 | ✅ PASS | `docs/verification/runs/20260713T105336Z-e06d` | edit txn version 1->2, jsHash=5e6edbcb63ed… |
+| S3-JAVA | ✅ PASS | `docs/verification/runs/20260713T105336Z-e06d` | java MessageDigest SHA-256 == frontend @noble/hashes SHA-256: true (39bf88532263…) |
+| S4 | ✅ PASS | `docs/verification/runs/20260713T105336Z-e06d` | single undo restores pre-txn hash: true |
 
 <!-- END GENERATED:acceptance -->

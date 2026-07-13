@@ -170,6 +170,33 @@ public final class TestRun implements AutoCloseable {
         }
     }
 
+    /**
+     * Ingests a {@code gate-results.json} the app wrote into this run directory (schema:
+     * {@code {tests:[{id,outcome,detail,evidence[]}], appInfo:{backend,...}}}). Each test becomes a
+     * result; the app's own evidence files (already inside the run dir) back the PASS rows.
+     */
+    public synchronized void ingestAppResults() {
+        Path resultsFile = dir.resolve("gate-results.json");
+        if (!Files.exists(resultsFile)) {
+            addResult(TestResult.fail("APP-RESULTS", 0, List.of("commands.jsonl"),
+                    "app produced no gate-results.json"));
+            return;
+        }
+        var node = JsonIo.read(resultsFile);
+        for (var test : node.path("tests")) {
+            String id = test.path("id").asText();
+            String outcome = test.path("outcome").asText();
+            String detail = test.path("detail").asText("");
+            List<String> evidence = new ArrayList<>();
+            test.path("evidence").forEach(e -> evidence.add(e.asText()));
+            if ("PASS".equals(outcome)) {
+                addResult(TestResult.pass(id, 0, evidence, detail));
+            } else {
+                addResult(TestResult.fail(id, 0, evidence, detail));
+            }
+        }
+    }
+
     /** Captures tool versions through real {@code --version} invocations into the manifest. */
     public void captureToolVersions(Map<String, List<String>> probes) {
         ObjectNode versions = manifest.withObject("/versions");

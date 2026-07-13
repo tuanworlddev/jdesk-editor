@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>JDesk Editor — Semantic Micro-Proof</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #1e1e1e; color: #ddd;
+        font-family: ui-monospace, monospace; }
+      #editor { position: absolute; top: 40px; left: 0; right: 0; bottom: 120px; }
+      #toolbar { height: 40px; display: flex; align-items: center; gap: 8px; padding: 0 8px; }
+      button { background: #0e639c; color: #fff; border: 0; padding: 4px 10px; cursor: pointer; }
+      #status { position: absolute; left: 0; right: 0; bottom: 0; height: 120px;
+        overflow: auto; padding: 8px; font-size: 12px; border-top: 1px solid #333; }
+      .ok { color: #4ec9b0; } .bad { color: #f48771; }
+      #pointer { position: fixed; width: 18px; height: 18px; border-radius: 50%;
+        background: rgba(78,201,176,.6); pointer-events: none; z-index: 9999;
+        transform: translate(-50%, -50%); transition: none; }
+    </style>
+  </head>
+  <body>
+    <div id="toolbar">
+      <button id="gate.newFile" data-sem="button">New File</button>
+      <input id="gate.filename" data-sem="input" placeholder="filename.ts" />
+    </div>
+    <div id="editor"></div>
+    <div id="pointer" style="display:none"></div>
+    <div id="status">Semantic micro-proof loading…</div>
+    <script type="module" src="/src/semantic.ts"></script>
+  </body>
+</html>

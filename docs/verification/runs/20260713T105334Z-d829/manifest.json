@@ -1,0 +1,29 @@
+{
+  "schemaVersion" : 1,
+  "runId" : "20260713T105334Z-d829",
+  "category" : "gate",
+  "suite" : "monaco-worker-gate",
+  "status" : "COMPLETE",
+  "startedAtUtc" : "2026-07-13T10:53:34.922843Z",
+  "os" : {
+    "name" : "Mac OS X",
+    "version" : "26.5.1",
+    "arch" : "aarch64"
+  },
+  "versions" : {
+    "java" : "25.0.3"
+  },
+  "appCommit" : "50d20f106f9084dc01491e639a3e73c9164203ea",
+  "appDirty" : true,
+  "jdeskSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "jdeskDirty" : false,
+  "jdeskPinnedSha" : "bf91bff70a1705b7c950faa01b8b26280e19e165",
+  "webView" : {
+    "backend" : "dev.jdesk.platform.macos.MacPlatformProvider",
+    "pid" : 11230,
+    "snapshotOk" : true
+  },
+  "endedAtUtc" : "2026-07-13T10:53:36.718832Z",
+  "outcome" : "PASS",
+  "testIds" : [ "GATE-01", "GATE-02", "GATE-03", "GATE-04", "GATE-05", "GATE-06", "GATE-07", "GATE-08", "GATE-09", "GATE-10" ]
+}

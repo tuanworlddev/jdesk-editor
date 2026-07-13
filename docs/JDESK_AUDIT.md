@@ -82,9 +82,9 @@ All paths are under `/Users/rupphi/Projects/JDESK/JDesk`.
 2. **macOS custom scheme is not a secure context.** `jdesk://app` is registered secure+CORS on
    Windows/Linux but WKWebView exposes no API to do so, so `window.crypto.subtle` and
    `crossOriginIsolated`/`SharedArrayBuffer` are unavailable on macOS. Editor impact: the
-   frontend hashes with a pure-JS SHA-256 (`@noble/hashes`) rather than WebCrypto. This is the
-   single behavior the Phase-0 Monaco gate must confirm empirically (same-origin ESM workers on
-   WKWebView). Source: `docs/platform/prerequisites.md`, `MacWebView.java`.
+   frontend hashes with a pure-JS SHA-256 (`@noble/hashes`) rather than WebCrypto — **confirmed
+   equivalent to Java's `MessageDigest` SHA-256 by the Phase-0 gate (S3-JAVA)**. Source:
+   `docs/platform/prerequisites.md`, `MacWebView.java`.
 3. **Default CSP has no `worker-src` and no `blob:`.** Same-origin ESM workers ride
    `script-src 'self'` (expected to work); blob workers need `worker-src 'self' blob:`, which the
    release validator permits. Monaco also injects dynamic `<style>` nodes, so the editor's CSP
